@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1063597550476",
+    "project_id": "navigation-app-8550d",
+    "storage_bucket": "navigation-app-8550d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1063597550476:android:273560bf5282e1946bc4a9",
+        "android_client_info": {
+          "package_name": "com.example.navigationapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1063597550476-61qt0vr0diosum4444pbjn9uqtg09rp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkaJe9P7eEr8TAjR3GgI1Q5GUSHJMIfiI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1063597550476-61qt0vr0diosum4444pbjn9uqtg09rp9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
