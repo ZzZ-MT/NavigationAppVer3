@@ -103,12 +103,4 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
                 .newLatLngZoom(sydney,zoomLevel))
         }
     }
-
-//    private fun getLocationAccess() {
-//        if (ContextCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            map.isMyLocationEnabled = true
-//        }
-//        else
-//            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST)
-//    }
 }
