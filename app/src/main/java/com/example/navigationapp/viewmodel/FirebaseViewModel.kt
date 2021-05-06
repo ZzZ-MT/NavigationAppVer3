@@ -1,5 +1,6 @@
 package com.example.navigationapp.viewmodel
 
+import android.app.Activity
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -16,8 +17,8 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import com.example.navigationapp.utils.Result
-import com.example.navigationapp.view.ui.LoginFragment
-import com.example.navigationapp.view.ui.RegisterFragment
+import com.example.navigationapp.view.LoginFragment
+import com.example.navigationapp.view.RegisterFragment
 
 class FirebaseViewModel: ViewModel() {
 
@@ -38,11 +39,47 @@ class FirebaseViewModel: ViewModel() {
 
     private val userRepository: UserRepository = UserRepositoryImpl()
 
+    //Handle navigate view by button click
     private fun onClickButton(view: Int) {
         _navigateScreen.value = Event(view)
     }
 
-    //Email
+    //Check login state
+    fun checkUserLoggedIn(): FirebaseUser? {
+        var firebaseUser: FirebaseUser? = null
+        viewModelScope.launch {
+            firebaseUser = userRepository.checkUserLoggedIn()
+        }
+        return firebaseUser
+    }
+
+    //Logout User
+    fun logOutUser() {
+        viewModelScope.launch {
+            userRepository.logoutUser()
+        }
+    }
+
+    //Send confirm email for reset password
+    fun sendPasswordResetEmail(email: String, fragment: Fragment)
+    {
+        viewModelScope.launch {
+            when(val result = userRepository.sendPasswordResetEmail(email))
+            {
+                is Result.Success -> {
+                    _toast.value = "Check email to reset your password!"
+                }
+                is Result.Error -> {
+                    _toast.value = result.exception.message
+                }
+                is Result.Canceled -> {
+                    _toast.value = fragment.getString(R.string.request_canceled)
+                }
+            }
+        }
+    }
+
+    //register by email
     fun registerUserFromAuthWithEmailAndPassword(name: String, email: String, password: String,fragment: Fragment) {
         launchDataLoad {
             viewModelScope.launch {
@@ -67,13 +104,14 @@ class FirebaseViewModel: ViewModel() {
         }
     }
 
+    //Login User
     fun loginUserFromAuthWithEmailAndPassword(email:String,password: String,fragment: Fragment) {
         launchDataLoad {
             viewModelScope.launch {
                 when(val result = userRepository.loginUserFromAuthWithEmailAndPassword(email,password)) {
                     is Result.Success -> {
                         Log.d(TAG,"Result.Success")
-                        _toast.value = result.data.displayName
+                        _toast.value = result.data?.displayName
                         onClickButton(R.id.homeFragment)
                     }
                     is Result.Error -> {
@@ -89,6 +127,7 @@ class FirebaseViewModel: ViewModel() {
         }
     }
 
+    //Create User information in Firestore
     private suspend fun createUserInFirestore(user: User, fragment:Fragment) {
         Log.d(TAG, "Result - ${user.name}")
         when(val result = userRepository.createUserInFirestore(user))

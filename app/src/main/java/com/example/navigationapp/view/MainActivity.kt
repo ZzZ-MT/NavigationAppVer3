@@ -1,4 +1,4 @@
-package com.example.navigationapp.view.ui
+package com.example.navigationapp.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -22,13 +22,6 @@ class MainActivity : AppCompatActivity() {
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-//        val navHostFragment = supportFragmentManager
-//            .findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment
-//        // Instantiate the navController using the NavHostFragment
-//        navController = navHostFragment.navController
-//        // Make sure actions in the ActionBar get propagated to the NavController
-//        setupActionBarWithNavController(navController)
     }
     override fun onStart() {
         super.onStart()

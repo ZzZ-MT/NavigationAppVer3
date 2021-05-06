@@ -53,7 +53,7 @@ class UserRepositoryImpl : UserRepository
         }
     }
 
-    override suspend fun loginUserFromAuthWithEmailAndPassword(email:String, password:String) :Result<FirebaseUser> {
+    override suspend fun loginUserFromAuthWithEmailAndPassword(email:String, password:String) :Result<FirebaseUser?> {
         try {
             return when(val resultDocumentSnapshot = firebaseAuth.signInWithEmailAndPassword(email,password).await()) {
                 is Result.Success -> {
@@ -72,6 +72,22 @@ class UserRepositoryImpl : UserRepository
             }
         } catch (exception:Exception) {
             return  Result.Error(exception)
+        }
+    }
+
+    override suspend fun checkUserLoggedIn(): FirebaseUser? {
+        return firebaseAuth.currentUser
+    }
+
+    override suspend fun logoutUser() {
+        firebaseAuth.signOut()
+    }
+
+    override suspend fun sendPasswordResetEmail(email: String): Result<Void?> {
+        return try {
+            firebaseAuth.sendPasswordResetEmail(email).await()
+        } catch (e:Exception) {
+            Result.Error(e)
         }
     }
 }
