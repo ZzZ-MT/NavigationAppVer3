@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.navigationapp.databinding.FragmentTabBinding
 import com.example.navigationapp.view.adapter.ViewPagerAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 
 class TabFragment: Fragment() {
     private val TAG ="TabFragment"
@@ -26,8 +27,6 @@ class TabFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        viewPager2?.isSaveEnabled = false
-        val adapter = ViewPagerAdapter(childFragmentManager,lifecycle)
-        adapter.createFragment(1)
         Log.i(TAG, "onCreate")
     }
 
@@ -38,7 +37,28 @@ class TabFragment: Fragment() {
     ): View? {
         Log.i(TAG, "onCreateView")
         _binding = FragmentTabBinding.inflate(inflater, container, false)
+        initView()
         return binding?.root
+    }
+
+    private fun initView() {
+        val tabLayout = binding?.tabLayout
+        val viewPager2= binding?.viewPager2
+
+
+        val adapter = ViewPagerAdapter(childFragmentManager,lifecycle)
+
+        viewPager2?.adapter = adapter
+
+
+        if (tabLayout != null && viewPager2 != null) {
+            TabLayoutMediator(tabLayout,viewPager2){tab,position ->
+                when (position) {
+                    0 -> tab.text = "Information"
+                    1 -> tab.text = "Map"
+                }
+            }.attach()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -7,15 +7,21 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.navigationapp.view.HomeFragment
 import com.example.navigationapp.view.InformationFragment
 
-class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle):FragmentStateAdapter(fragmentManager, lifecycle) {
+class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle):FragmentStateAdapter(
+    fragmentManager, lifecycle) {
+
     override fun getItemCount(): Int {
-        return 2
+        return 1
     }
 
     override fun createFragment(position: Int): Fragment {
         return when(position) {
-            1 -> { HomeFragment() }
-            2 -> { InformationFragment() }
+            0 -> {
+                InformationFragment()
+            }
+            1 -> {
+                HomeFragment()
+            }
             else -> Fragment()
         }
     }

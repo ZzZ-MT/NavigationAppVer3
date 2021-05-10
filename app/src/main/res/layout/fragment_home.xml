@@ -12,15 +12,19 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center">
+
+
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/btn_logout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top|right"
+                android:layout_gravity="bottom|left"
                 android:layout_margin="16dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -29,6 +33,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
                 android:layout_margin="16dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right"
+                android:layout_margin="16dp" />
+
 
             <fragment
                 android:id="@+id/map"

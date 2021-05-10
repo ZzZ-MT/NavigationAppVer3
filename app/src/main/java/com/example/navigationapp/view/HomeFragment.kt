@@ -10,9 +10,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,11 +23,13 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentHomeBinding
+import com.example.navigationapp.databinding.FragmentSearchPlacesBinding
 import com.example.navigationapp.utils.EventObserver
 import com.example.navigationapp.utils.PermissionUtils.isPermissionGranted
 import com.example.navigationapp.utils.PermissionUtils.requestPermission
 import com.example.navigationapp.viewmodel.FirebaseViewModel
 import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.Status
 import com.google.android.gms.common.api.internal.ConnectionCallbacks
 import com.google.android.gms.common.api.internal.OnConnectionFailedListener
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -36,6 +40,9 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 
 
 class HomeFragment: Fragment(),
@@ -97,10 +104,10 @@ class HomeFragment: Fragment(),
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        navController = Navigation.findNavController(view)
-        firebaseViewModel.navigateScreen.observe(requireActivity(), EventObserver {
-            navController.navigate(it)
-        })
+//        navController = Navigation.findNavController(view)
+//        firebaseViewModel.navigateScreen.observe(requireActivity(), EventObserver {
+//            navController.navigate(it)
+//        })
 
         firebaseViewModel.toast.observe(viewLifecycleOwner, Observer { message ->
             message?.let {
@@ -119,6 +126,23 @@ class HomeFragment: Fragment(),
             Log.d(TAG,"btnCurrentLocation")
         }
 
+        binding?.btnSearch?.setOnClickListener {
+//            findNavController().navigate(R.id.searchPlaceFragment)
+            showSearchPlacesFragment()
+        }
+
+    }
+
+    private fun showSearchPlacesFragment() {
+        val searchPlacesBinding:FragmentSearchPlacesBinding = DataBindingUtil.inflate(LayoutInflater.from(context),
+        R.layout.fragment_search_places,null,false)
+        val dialogView = context?.let {
+            AlertDialog.Builder(it,0).create()
+        }
+        dialogView?.apply{
+            setView(searchPlacesBinding.root)
+            setCancelable(false)
+        }?.show()
     }
 
     @SuppressLint("MissingPermission")
@@ -142,6 +166,7 @@ class HomeFragment: Fragment(),
         if (googleMap != null) {
             map = googleMap
         }
+        getCurrentLoc()
 
         val zoomLevel = 10f
         val sydney = LatLng(-33.852, 151.211)
@@ -177,9 +202,6 @@ class HomeFragment: Fragment(),
             // Enable the my location layer if the permission has been granted.
             enableMyLocation()
 
-
-
-
         } else {
             // Permission was denied. Display an error message
             // Display the missing permission error dialog when the fragments resume.
@@ -196,6 +218,51 @@ class HomeFragment: Fragment(),
 
     override fun onConnectionFailed(p0: ConnectionResult) {
 
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        Log.i(TAG, "onViewStateRestored")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.i(TAG, "onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i(TAG, "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.i(TAG, "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.i(TAG, "onStop")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.i(TAG, "onSaveInstanceState")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.i(TAG, "onDestroyView")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i(TAG, "onDestroy")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.i(TAG, "onDetach")
     }
 
 
