@@ -1,12 +1,16 @@
 package com.example.navigationapp.view
 
+
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -18,20 +22,49 @@ import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentHomeBinding
 import com.example.navigationapp.utils.EventObserver
+import com.example.navigationapp.utils.PermissionUtils.isPermissionGranted
+import com.example.navigationapp.utils.PermissionUtils.requestPermission
 import com.example.navigationapp.viewmodel.FirebaseViewModel
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.internal.ConnectionCallbacks
+import com.google.android.gms.common.api.internal.OnConnectionFailedListener
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class HomeFragment: Fragment(), OnMapReadyCallback {
+
+class HomeFragment: Fragment(),
+        OnMapReadyCallback,
+        ConnectionCallbacks,
+        OnConnectionFailedListener{
+
+    companion object {
+        /**
+         * Request code for location permission request.
+         *
+         * @see .onRequestPermissionsResult
+         */
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+    }
+
     private val TAG ="HomeFragment"
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding
 
     //Google Map
     private lateinit var map: GoogleMap
-    private val LOCATION_PERMISSION_REQUEST = 1
+    private var permissionDenied = false
+    //private var isPermissionGrated:Boolean = false
 
+    //Location
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    //Navigation component
     private lateinit var navController: NavController
 
 
@@ -40,14 +73,13 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?,
     ): View? {
         Log.i(TAG, "onCreateView")
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding?.viewmodel = firebaseViewModel
-
 
         return binding?.root
     }
@@ -55,17 +87,15 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        mapView.onCreate(savedInstanceState)
-//        MapsInitializer.initialize(this)
-//        mapView.getMapAsync(this)
-
-//        map.setMinZoomPreference(6.0f)
-//        map.setMaxZoomPreference(14.0f)
-
+//        if(isPermissionGrated) {
+//
+//        }
         // Get the SupportMapFragment and request notification when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
 
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         navController = Navigation.findNavController(view)
         firebaseViewModel.navigateScreen.observe(requireActivity(), EventObserver {
@@ -79,28 +109,94 @@ class HomeFragment: Fragment(), OnMapReadyCallback {
             }
         })
 
-//        binding?.btnLogout?.setOnClickListener {
-//            firebaseViewModel.logOutUser()
-//            findNavController().navigate(R.id.loginFragment)
-//        }
+        binding?.btnLogout?.setOnClickListener {
+            firebaseViewModel.logOutUser()
+            findNavController().navigate(R.id.loginFragment)
+        }
+
+        binding?.btnCurrentLocation?.setOnClickListener {
+            getCurrentLoc()
+            Log.d(TAG,"btnCurrentLocation")
+        }
 
     }
+
+    @SuppressLint("MissingPermission")
+    private fun getCurrentLoc() {
+    fusedLocationClient.lastLocation.addOnCompleteListener {
+            var location = it.result
+            gotoLocation(location.latitude,location.longitude)
+        }
+    }
+
+    private fun gotoLocation(latitude: Double, longitude: Double) {
+        var latLng= LatLng(latitude,longitude)
+        var cameraUpdate:CameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18F)
+        map.moveCamera(cameraUpdate)
+        map.addMarker(MarkerOptions().position(latLng).title("Your Location"))
+        map.addCircle(CircleOptions().center(latLng).radius(100.0).strokeColor(Color.BLUE))
+    }
+
 
     override fun onMapReady(googleMap: GoogleMap?) {
         if (googleMap != null) {
             map = googleMap
         }
-//        getLocationAccess()
+
         val zoomLevel = 10f
         val sydney = LatLng(-33.852, 151.211)
-        map.apply {
-            addMarker(
-                MarkerOptions()
-                    .position(sydney)
-                    .title("Marker in Sydney")
+//        map.apply {
+//            addMarker(
+//                    MarkerOptions()
+//                            .position(sydney)
+//                            .title("Marker in Sydney")
+//            )
+//            moveCamera(CameraUpdateFactory
+//                    .newLatLngZoom(sydney, zoomLevel))
+//        }
+    }
+
+    private fun enableMyLocation() {
+        if (!::map.isInitialized) return
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            map.isMyLocationEnabled = true
+        } else {
+            // Permission to access the location is missing. Show rationale and request permission
+            requestPermission(requireActivity() as AppCompatActivity, LOCATION_PERMISSION_REQUEST_CODE,
+                    Manifest.permission.ACCESS_FINE_LOCATION, true
             )
-            moveCamera(CameraUpdateFactory
-                .newLatLngZoom(sydney,zoomLevel))
         }
     }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
+            return
+        }
+        if (isPermissionGranted(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // Enable the my location layer if the permission has been granted.
+            enableMyLocation()
+
+
+
+
+        } else {
+            // Permission was denied. Display an error message
+            // Display the missing permission error dialog when the fragments resume.
+            permissionDenied = true
+        }
+    }
+
+    override fun onConnected(p0: Bundle?) {
+    }
+
+    override fun onConnectionSuspended(p0: Int) {
+
+    }
+
+    override fun onConnectionFailed(p0: ConnectionResult) {
+
+    }
+
+
 }

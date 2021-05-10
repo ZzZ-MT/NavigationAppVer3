@@ -4,4 +4,8 @@
     <string name="login_successful">Login Successful!</string>
     <string name="request_canceled">Request canceled</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="location_permission_denied">Location is denied</string>
+    <string name="permission_required_toast">Location is required</string>
+    <string name="permission_rationale_location">Permission rationale location</string>
+
 </resources>
