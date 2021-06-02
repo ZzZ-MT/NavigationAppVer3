@@ -16,9 +16,6 @@ class TabFragment: Fragment() {
     private var _binding: FragmentTabBinding? = null
     private val binding get() = _binding
 
-//    private val tabLayout = binding?.tabLayout
-//    private val viewPager2 = binding?.viewPager2
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         Log.i(TAG, "onAttach")
@@ -26,7 +23,6 @@ class TabFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        viewPager2?.isSaveEnabled = false
         Log.i(TAG, "onCreate")
     }
 
@@ -45,7 +41,6 @@ class TabFragment: Fragment() {
         val tabLayout = binding?.tabLayout
         val viewPager2= binding?.viewPager2
 
-
         val adapter = ViewPagerAdapter(childFragmentManager,lifecycle)
 
         viewPager2?.adapter = adapter
@@ -54,7 +49,7 @@ class TabFragment: Fragment() {
         if (tabLayout != null && viewPager2 != null) {
             TabLayoutMediator(tabLayout,viewPager2){tab,position ->
                 when (position) {
-                    0 -> tab.text = "Information"
+                    0 -> tab.text = "User"
                     1 -> tab.text = "Map"
                 }
             }.attach()

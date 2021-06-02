@@ -85,7 +85,7 @@ class RegisterFragment: Fragment() {
             if(name != "" && email != "" && password != "" && confirm != "") {
                 if (password == confirm) {
                     firebaseViewModel.registerUserFromAuthWithEmailAndPassword(name,email,password,this)
-//                    findNavController().navigate(R.id.loginFragment)
+//                  findNavController().navigate(R.id.loginFragment)
                 } else {
                     Toast.makeText(activity, "Your password is not match",
                             Toast.LENGTH_LONG).show()

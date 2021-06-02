@@ -71,7 +71,7 @@ class SplashFragment : Fragment() {
             } else {
                 currentFirebaseUser?.let { firebaseUser ->
                     Log.i(TAG, firebaseUser.uid)
-                    findNavController().navigate(R.id.tabFragment)
+                    findNavController().navigate(R.id.homeFragment)
                 }
             }
         }

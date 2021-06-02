@@ -14,8 +14,6 @@ class InformationFragment: Fragment() {
     private var _binding: FragmentInformationBinding? = null
     private val binding get() = _binding
 
-
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         Log.i(TAG, "onAttach")

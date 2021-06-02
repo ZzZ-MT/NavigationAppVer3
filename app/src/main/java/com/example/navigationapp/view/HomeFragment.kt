@@ -1,49 +1,37 @@
 package com.example.navigationapp.view
-
-
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentHomeBinding
 import com.example.navigationapp.databinding.FragmentSearchPlacesBinding
-import com.example.navigationapp.utils.EventObserver
 import com.example.navigationapp.utils.PermissionUtils.isPermissionGranted
 import com.example.navigationapp.utils.PermissionUtils.requestPermission
 import com.example.navigationapp.viewmodel.FirebaseViewModel
 import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.Status
 import com.google.android.gms.common.api.internal.ConnectionCallbacks
 import com.google.android.gms.common.api.internal.OnConnectionFailedListener
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
-
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 
 class HomeFragment: Fragment(),
         OnMapReadyCallback,
@@ -125,13 +113,8 @@ class HomeFragment: Fragment(),
             getCurrentLoc()
             Log.d(TAG,"btnCurrentLocation")
         }
-
-        binding?.btnSearch?.setOnClickListener {
-//            findNavController().navigate(R.id.searchPlaceFragment)
-            showSearchPlacesFragment()
-        }
-
     }
+
 
     private fun showSearchPlacesFragment() {
         val searchPlacesBinding:FragmentSearchPlacesBinding = DataBindingUtil.inflate(LayoutInflater.from(context),
@@ -160,6 +143,8 @@ class HomeFragment: Fragment(),
         map.addMarker(MarkerOptions().position(latLng).title("Your Location"))
         map.addCircle(CircleOptions().center(latLng).radius(100.0).strokeColor(Color.BLUE))
     }
+
+
 
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -220,6 +205,8 @@ class HomeFragment: Fragment(),
 
     }
 
+
+
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         Log.i(TAG, "onViewStateRestored")
@@ -264,6 +251,4 @@ class HomeFragment: Fragment(),
         super.onDetach()
         Log.i(TAG, "onDetach")
     }
-
-
 }
