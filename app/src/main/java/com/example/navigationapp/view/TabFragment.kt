@@ -44,7 +44,7 @@ class TabFragment: Fragment() {
         val adapter = ViewPagerAdapter(childFragmentManager,lifecycle)
 
         viewPager2?.adapter = adapter
-
+        viewPager2?.isUserInputEnabled = false
 
         if (tabLayout != null && viewPager2 != null) {
             TabLayoutMediator(tabLayout,viewPager2){tab,position ->
@@ -58,6 +58,5 @@ class TabFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
     }
 }

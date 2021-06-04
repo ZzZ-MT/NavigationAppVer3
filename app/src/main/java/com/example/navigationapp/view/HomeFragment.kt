@@ -166,33 +166,33 @@ class HomeFragment: Fragment(),
 //        }
     }
 
-    private fun enableMyLocation() {
-        if (!::map.isInitialized) return
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            map.isMyLocationEnabled = true
-        } else {
-            // Permission to access the location is missing. Show rationale and request permission
-            requestPermission(requireActivity() as AppCompatActivity, LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true
-            )
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
-            return
-        }
-        if (isPermissionGranted(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            // Enable the my location layer if the permission has been granted.
-            enableMyLocation()
-
-        } else {
-            // Permission was denied. Display an error message
-            // Display the missing permission error dialog when the fragments resume.
-            permissionDenied = true
-        }
-    }
+//    private fun enableMyLocation() {
+//        if (!::map.isInitialized) return
+//        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+//                == PackageManager.PERMISSION_GRANTED) {
+//            map.isMyLocationEnabled = true
+//        } else {
+//            // Permission to access the location is missing. Show rationale and request permission
+//            requestPermission(requireActivity() as AppCompatActivity, LOCATION_PERMISSION_REQUEST_CODE,
+//                    Manifest.permission.ACCESS_FINE_LOCATION, true
+//            )
+//        }
+//    }
+//
+//    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+//        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
+//            return
+//        }
+//        if (isPermissionGranted(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION)) {
+//            // Enable the my location layer if the permission has been granted.
+//            enableMyLocation()
+//
+//        } else {
+//            // Permission was denied. Display an error message
+//            // Display the missing permission error dialog when the fragments resume.
+//            permissionDenied = true
+//        }
+//    }
 
     override fun onConnected(p0: Bundle?) {
     }

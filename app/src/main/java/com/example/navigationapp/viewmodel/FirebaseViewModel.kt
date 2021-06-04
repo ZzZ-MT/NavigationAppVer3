@@ -112,7 +112,7 @@ class FirebaseViewModel: ViewModel() {
                     is Result.Success -> {
                         Log.d(TAG,"Result.Success")
                         _toast.value = result.data?.displayName
-                        onClickButton(R.id.homeFragment)
+                        onClickButton(R.id.tabFragment)
                     }
                     is Result.Error -> {
                         Log.e(TAG, "${result.exception.message}")

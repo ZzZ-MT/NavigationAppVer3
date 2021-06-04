@@ -1,6 +1,5 @@
 package com.example.navigationapp.repo.implementation
 
-import android.content.Context
 import android.util.Log
 import com.example.navigationapp.model.User
 import com.example.navigationapp.repo.UserRepository
@@ -9,7 +8,6 @@ import com.example.navigationapp.utils.Result
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-
 
 class UserRepositoryImpl : UserRepository
 {

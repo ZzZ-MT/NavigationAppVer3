@@ -10,14 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="20">
+        android:weightSum="100">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="19">
-
+            android:layout_weight="97">
         </androidx.viewpager2.widget.ViewPager2>
 
         <com.google.android.material.tabs.TabLayout
@@ -25,12 +24,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabIndicatorColor="@color/quantum_amber600"
-            app:tabMode="fixed"
-            app:tabTextColor="@color/black"
-            android:background="@color/white"
+            app:tabMode="auto"
+            app:tabTextColor="@color/white"
+            android:background="@color/black"
             app:tabSelectedTextColor="@color/quantum_pink"
-            android:layout_weight="1">
-
+            android:layout_weight="3">
         </com.google.android.material.tabs.TabLayout>
 
 

@@ -1,15 +1,16 @@
 package com.example.navigationapp.view
 
-import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
-import com.example.navigationapp.R
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.navigationapp.databinding.ActivityMainBinding
+import com.google.android.gms.location.LocationRequest
+
 
 class MainActivity : AppCompatActivity() {
     private val TAG="MainActivity"
@@ -20,8 +21,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkPermission()
+        }
+        // Re-check before enabling. You can add an else statement to warn the user about the lack of functionality if it's disabled.
+        // "or" is used instead of "and" as per the error. If it requires both, flip it over to &&. (I'm not sure, I haven't used GPS stuff before)
+        // Re-check before enabling. You can add an else statement to warn the user about the lack of functionality if it's disabled.
+        // "or" is used instead of "and" as per the error. If it requires both, flip it over to &&. (I'm not sure, I haven't used GPS stuff before)
+
     }
     override fun onStart() {
         super.onStart()
@@ -51,5 +61,18 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.i(TAG, "onDestroy")
+    }
+
+    fun checkPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) { //Can add more as per requirement
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION),
+                123)
+        }
     }
 }

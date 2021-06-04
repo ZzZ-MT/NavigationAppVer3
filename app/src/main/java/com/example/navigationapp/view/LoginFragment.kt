@@ -102,7 +102,6 @@ class LoginFragment: Fragment() {
             showResetPasswordDialog()
         }
         Log.i(TAG, "onViewCreated")
-
     }
 
     private fun showResetPasswordDialog() {
