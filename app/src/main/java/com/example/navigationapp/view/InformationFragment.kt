@@ -69,13 +69,15 @@ class InformationFragment: Fragment() {
             currentFirebaseUser?.let { firebaseUser ->
                 Log.i(TAG, firebaseUser.uid)
                 val user = currentFirebaseUser
-                var name = currentFirebaseUser!!.displayName
-                var email = currentFirebaseUser!!.email
-                Log.i(TAG, name + email)
-            }
 
+                var name = user?.displayName
+                var email = user?.email
+
+                binding?.tvName?.text = name
+                binding?.tvEmail?.text = email
+
+            }
         }
         Log.i(TAG, "onViewCreated")
-
     }
 }

@@ -71,14 +71,14 @@ class SplashFragment : Fragment() {
         coroutineScope.launch {
             delay(3000)
             currentFirebaseUser = firebaseViewModel.checkUserLoggedIn()
-            if(currentFirebaseUser == null) {
-                findNavController().navigate(R.id.loginFragment)
-            } else {
-                currentFirebaseUser?.let { firebaseUser ->
-                    Log.i(TAG, firebaseUser.uid)
-                    findNavController().navigate(R.id.tabFragment)
-                }
-            }
+//            if(currentFirebaseUser == null) {
+//                findNavController().navigate(R.id.loginFragment)
+//            } else {
+//                currentFirebaseUser?.let { firebaseUser ->
+//                    Log.i(TAG, firebaseUser.uid)
+//                    findNavController().navigate(R.id.tabFragment)
+//                }
+//            }
         }
         Log.i(TAG, "onViewCreated")
     }

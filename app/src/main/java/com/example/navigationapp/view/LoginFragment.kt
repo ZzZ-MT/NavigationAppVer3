@@ -73,7 +73,7 @@ class LoginFragment: Fragment() {
             navController.navigate(it)
         })
 
-        firebaseViewModel.toast.observe(viewLifecycleOwner, Observer { message ->
+        firebaseViewModel.toast.observe(viewLifecycleOwner, { message ->
             message?.let {
                 Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
                 firebaseViewModel.onToastShown()

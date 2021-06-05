@@ -49,7 +49,18 @@ class FirebaseViewModel: ViewModel() {
         var firebaseUser: FirebaseUser? = null
         viewModelScope.launch {
             firebaseUser = userRepository.checkUserLoggedIn()
+            if(firebaseUser == null) {
+                onClickButton(R.id.loginFragment)
+            } else {
+                onClickButton(R.id.tabFragment)
+            }
         }
+        return firebaseUser
+    }
+
+    fun getCurrentUser() :FirebaseUser? {
+        var firebaseUser:FirebaseUser? = null
+
         return firebaseUser
     }
 
@@ -187,7 +198,4 @@ class FirebaseViewModel: ViewModel() {
             }
         }
     }
-
-
-
 }
