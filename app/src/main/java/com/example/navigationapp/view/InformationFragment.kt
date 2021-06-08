@@ -19,14 +19,13 @@ import com.example.navigationapp.viewmodel.FirebaseViewModel
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class InformationFragment: Fragment() {
     private val TAG ="InformationFragment"
     private var _binding: FragmentInformationBinding? = null
     private val binding get() = _binding
-    private lateinit var navController: NavController
+    //private lateinit var navController: NavController
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private var currentFirebaseUser: FirebaseUser? = null
 
@@ -50,6 +49,7 @@ class InformationFragment: Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         Log.i(TAG, "onCreateView")
+        binding?.viewmodel = firebaseViewModel
         _binding = FragmentInformationBinding.inflate(inflater, container, false)
         return binding?.root
     }
@@ -62,6 +62,20 @@ class InformationFragment: Fragment() {
 //        firebaseViewModel.navigateScreen.observe(requireActivity(), EventObserver {
 //            navController.navigate(it)
 //        })
+
+//        firebaseViewModel.toast.observe(viewLifecycleOwner, { message ->
+//            message?.let {
+//                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+//                firebaseViewModel.onToastShown()
+//            }
+//        })
+
+        binding?.btLogout?.setOnClickListener {
+            coroutineScope.launch {
+                firebaseViewModel.logOutUser()
+                findNavController().navigate(R.id.loginFragment)
+            }
+        }
 
         coroutineScope.launch {
             currentFirebaseUser = firebaseViewModel.checkUserLoggedIn()

@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import com.example.navigationapp.utils.Result
 import com.example.navigationapp.view.LoginFragment
 import com.example.navigationapp.view.RegisterFragment
+import kotlinx.coroutines.Dispatchers
 
 class FirebaseViewModel: ViewModel() {
 
@@ -47,12 +48,12 @@ class FirebaseViewModel: ViewModel() {
     //Check login state
     fun checkUserLoggedIn(): FirebaseUser? {
         var firebaseUser: FirebaseUser? = null
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             firebaseUser = userRepository.checkUserLoggedIn()
-            if(firebaseUser == null) {
-                onClickButton(R.id.loginFragment)
-            } else {
+            if(firebaseUser != null) {
                 onClickButton(R.id.tabFragment)
+            } else {
+                onClickButton(R.id.loginFragment)
             }
         }
         return firebaseUser
@@ -60,13 +61,15 @@ class FirebaseViewModel: ViewModel() {
 
     fun getCurrentUser() :FirebaseUser? {
         var firebaseUser:FirebaseUser? = null
-
+        viewModelScope.launch {
+            firebaseUser = userRepository.checkUserLoggedIn()
+        }
         return firebaseUser
     }
 
     //Logout User
     fun logOutUser() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             userRepository.logoutUser()
         }
     }
@@ -74,7 +77,7 @@ class FirebaseViewModel: ViewModel() {
     //Send confirm email for reset password
     fun sendPasswordResetEmail(email: String, fragment: Fragment)
     {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             when(val result = userRepository.sendPasswordResetEmail(email))
             {
                 is Result.Success -> {
@@ -93,7 +96,7 @@ class FirebaseViewModel: ViewModel() {
     //register by email
     fun registerUserFromAuthWithEmailAndPassword(name: String, email: String, password: String,fragment: Fragment) {
         launchDataLoad {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.Main) {
                 when(val result = userRepository.registerUserFromAuthWithEmailAndPassword(email, password)) {
                     is Result.Success -> {
                         Log.e(TAG, "Result.Success")
@@ -118,7 +121,7 @@ class FirebaseViewModel: ViewModel() {
     //Login User
     fun loginUserFromAuthWithEmailAndPassword(email:String,password: String,fragment: Fragment) {
         launchDataLoad {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.Main) {
                 when(val result = userRepository.loginUserFromAuthWithEmailAndPassword(email,password)) {
                     is Result.Success -> {
                         Log.d(TAG,"Result.Success")
@@ -182,7 +185,7 @@ class FirebaseViewModel: ViewModel() {
     }
 
     private fun launchDataLoad(block: suspend () -> Unit): Job {
-        return viewModelScope.launch {
+        return viewModelScope.launch(Dispatchers.Main) {
             try
             {
                 _spinner.value = true

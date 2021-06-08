@@ -39,7 +39,7 @@ class SplashFragment : Fragment() {
 
     private var currentFirebaseUser: FirebaseUser? = null
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -68,7 +68,7 @@ class SplashFragment : Fragment() {
             navController.navigate(it)
         })
 
-        coroutineScope.launch {
+        coroutineScope.launch(Dispatchers.IO) {
             delay(3000)
             currentFirebaseUser = firebaseViewModel.checkUserLoggedIn()
 //            if(currentFirebaseUser == null) {
