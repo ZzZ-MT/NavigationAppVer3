@@ -70,7 +70,7 @@ class SplashFragment : Fragment() {
 
         coroutineScope.launch(Dispatchers.IO) {
             delay(3000)
-            currentFirebaseUser = firebaseViewModel.checkUserLoggedIn()
+            currentFirebaseUser = firebaseViewModel.getCurrentUser()
 //            if(currentFirebaseUser == null) {
 //                findNavController().navigate(R.id.loginFragment)
 //            } else {

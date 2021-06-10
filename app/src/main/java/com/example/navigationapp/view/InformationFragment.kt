@@ -57,19 +57,6 @@ class InformationFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //Navigation Controller
-//        navController = Navigation.findNavController(view)
-//        firebaseViewModel.navigateScreen.observe(requireActivity(), EventObserver {
-//            navController.navigate(it)
-//        })
-
-//        firebaseViewModel.toast.observe(viewLifecycleOwner, { message ->
-//            message?.let {
-//                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-//                firebaseViewModel.onToastShown()
-//            }
-//        })
-
         binding?.btLogout?.setOnClickListener {
             coroutineScope.launch {
                 firebaseViewModel.logOutUser()
@@ -78,19 +65,15 @@ class InformationFragment: Fragment() {
         }
 
         coroutineScope.launch {
-            currentFirebaseUser = firebaseViewModel.checkUserLoggedIn()
+            Log.i(TAG,"loading")
 
-            currentFirebaseUser?.let { firebaseUser ->
-                Log.i(TAG, firebaseUser.uid)
-                val user = currentFirebaseUser
+            currentFirebaseUser = firebaseViewModel.getCurrentUserInformation()
+            //Log.i(TAG, currentFirebaseUser!!.uid)
+            var uid = currentFirebaseUser?.uid
+            var email = currentFirebaseUser?.email
+            binding?.tvName?.text = uid
+            binding?.tvEmail?.text = email
 
-                var name = user?.displayName
-                var email = user?.email
-
-                binding?.tvName?.text = name
-                binding?.tvEmail?.text = email
-
-            }
         }
         Log.i(TAG, "onViewCreated")
     }

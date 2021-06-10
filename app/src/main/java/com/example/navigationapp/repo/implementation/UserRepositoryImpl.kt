@@ -51,6 +51,7 @@ class UserRepositoryImpl : UserRepository
         }
     }
 
+
     override suspend fun loginUserFromAuthWithEmailAndPassword(email:String, password:String) :Result<FirebaseUser?> {
         try {
             return when(val resultDocumentSnapshot = firebaseAuth.signInWithEmailAndPassword(email,password).await()) {
@@ -73,7 +74,7 @@ class UserRepositoryImpl : UserRepository
         }
     }
 
-    override suspend fun checkUserLoggedIn(): FirebaseUser? {
+    override suspend fun getCurrentUser(): FirebaseUser? {
         return firebaseAuth.currentUser
     }
 
@@ -86,6 +87,28 @@ class UserRepositoryImpl : UserRepository
             firebaseAuth.sendPasswordResetEmail(email).await()
         } catch (e:Exception) {
             Result.Error(e)
+        }
+    }
+
+    override suspend fun readUserInformation(uid: String): Result<FirebaseFirestore> {
+        try{
+            return when (val resultDocumentSnapshot = userCollection.document(uid).get().await()) {
+                is Result.Success -> {
+                    Log.i(TAG, "Result.Success")
+
+                    Result.Success()
+                }
+                is Result.Error -> {
+                    Log.e(TAG, "${resultDocumentSnapshot.exception}")
+                    Result.Error(resultDocumentSnapshot.exception)
+                }
+                is Result.Canceled ->  {
+                    Log.e(TAG, "${resultDocumentSnapshot.exception}")
+                    Result.Canceled(resultDocumentSnapshot.exception)
+                }
+            }
+        } catch (exception:Exception) {
+            return Result.Error(exception)
         }
     }
 }

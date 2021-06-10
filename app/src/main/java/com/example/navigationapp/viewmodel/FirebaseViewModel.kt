@@ -22,6 +22,7 @@ import com.example.navigationapp.view.RegisterFragment
 import kotlinx.coroutines.Dispatchers
 
 class FirebaseViewModel: ViewModel() {
+    private val TAG ="FirebaseViewModel"
 
     private val _toast = MutableLiveData<String?>()
     val toast: LiveData<String?>
@@ -46,10 +47,11 @@ class FirebaseViewModel: ViewModel() {
     }
 
     //Check login state
-    fun checkUserLoggedIn(): FirebaseUser? {
+    fun getCurrentUser(): FirebaseUser? {
         var firebaseUser: FirebaseUser? = null
         viewModelScope.launch(Dispatchers.Main) {
-            firebaseUser = userRepository.checkUserLoggedIn()
+            firebaseUser = userRepository.getCurrentUser()
+            Log.i(TAG,"${firebaseUser?.uid}")
             if(firebaseUser != null) {
                 onClickButton(R.id.tabFragment)
             } else {
@@ -59,12 +61,19 @@ class FirebaseViewModel: ViewModel() {
         return firebaseUser
     }
 
-    fun getCurrentUser() :FirebaseUser? {
-        var firebaseUser:FirebaseUser? = null
+    fun getCurrentUserInformation() :FirebaseUser? {
+        var currentUser:FirebaseUser? = null
         viewModelScope.launch {
-            firebaseUser = userRepository.checkUserLoggedIn()
+            currentUser = userRepository.getCurrentUser()
+            Log.i(TAG,"${currentUser?.uid}")
+//            currentUser?.let {
+//                val uid = currentUser!!.uid
+//                val name = currentUser!!.displayName
+//                val email = currentUser!!.email
+//                _currentUserMLD.value = User(uid,name,email)
+//            }
         }
-        return firebaseUser
+        return currentUser
     }
 
     //Logout User
@@ -75,8 +84,7 @@ class FirebaseViewModel: ViewModel() {
     }
 
     //Send confirm email for reset password
-    fun sendPasswordResetEmail(email: String, fragment: Fragment)
-    {
+    fun sendPasswordResetEmail(email: String, fragment: Fragment) {
         viewModelScope.launch(Dispatchers.IO) {
             when(val result = userRepository.sendPasswordResetEmail(email))
             {
@@ -169,6 +177,7 @@ class FirebaseViewModel: ViewModel() {
             }
         }
     }
+
 
     private fun createUserObject(firebaseUser: FirebaseUser, name: String, email: String): User {
 
