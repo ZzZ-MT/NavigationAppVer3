@@ -149,6 +149,16 @@ class FirebaseViewModel: ViewModel() {
         }
     }
 
+    //Read user information
+    fun readUserInformationInFirestore(uid:String, fragment: Fragment) {
+        var userInformation:User = null
+        launchDataLoad {
+            viewModelScope.launch(Dispatchers.Main) {
+              userInformation = userRepository.readUserInformation(uid)
+            }
+        }
+    }
+
     //Create User information in Firestore
     private suspend fun createUserInFirestore(user: User, fragment:Fragment) {
         Log.d(TAG, "Result - ${user.name}")
@@ -177,6 +187,8 @@ class FirebaseViewModel: ViewModel() {
             }
         }
     }
+
+
 
 
     private fun createUserObject(firebaseUser: FirebaseUser, name: String, email: String): User {

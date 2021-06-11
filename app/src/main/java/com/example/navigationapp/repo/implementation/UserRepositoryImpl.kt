@@ -7,6 +7,7 @@ import com.example.navigationapp.utils.extension.await
 import com.example.navigationapp.utils.Result
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 
 class UserRepositoryImpl : UserRepository
@@ -90,25 +91,11 @@ class UserRepositoryImpl : UserRepository
         }
     }
 
-    override suspend fun readUserInformation(uid: String): Result<FirebaseFirestore> {
-        try{
-            return when (val resultDocumentSnapshot = userCollection.document(uid).get().await()) {
-                is Result.Success -> {
-                    Log.i(TAG, "Result.Success")
-
-                    Result.Success()
-                }
-                is Result.Error -> {
-                    Log.e(TAG, "${resultDocumentSnapshot.exception}")
-                    Result.Error(resultDocumentSnapshot.exception)
-                }
-                is Result.Canceled ->  {
-                    Log.e(TAG, "${resultDocumentSnapshot.exception}")
-                    Result.Canceled(resultDocumentSnapshot.exception)
-                }
-            }
-        } catch (exception:Exception) {
-            return Result.Error(exception)
+    override suspend fun readUserInformation(uid: String):Result<DocumentSnapshot?> {
+        return try {
+            userCollection.document(uid).get().await()
+        } catch (exception: Exception) {
+            Result.Error(exception)
         }
     }
 }
