@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.navigationapp.databinding.ActivityMainBinding
-import com.google.android.gms.location.LocationRequest
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +19,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i(TAG,"onCreate")
+//        if (!AppPreferences.firstRun) {
+//            AppPreferences.firstRun = true
+//            Log.d("SpinKotlin", "The value of our pref is: ${AppPreferences.firstRun}")
+//        }
+//        if (AppPreferences.changeUserName == null) {
+//            AppPreferences.changeUserName = "Dat"
+//        }
+//
+//        if(!AppPreferences.changeUserStatus) {
+//            AppPreferences.changeUserStatus = true
+//        }
 
 
         val binding = ActivityMainBinding.inflate(layoutInflater)

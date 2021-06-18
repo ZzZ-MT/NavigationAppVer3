@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentInformationBinding
 import com.example.navigationapp.utils.EventObserver
-import com.example.navigationapp.viewmodel.FirebaseViewModel
+import com.example.navigationapp.viewmodel.UserViewModel
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +30,7 @@ class InformationFragment: Fragment() {
     private var currentFirebaseUser: FirebaseUser? = null
 
     private val firebaseViewModel by lazy {
-        ViewModelProvider(this).get(FirebaseViewModel::class.java)
+        ViewModelProvider(this).get(UserViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {
@@ -70,8 +70,10 @@ class InformationFragment: Fragment() {
             currentFirebaseUser = firebaseViewModel.getCurrentUserInformation()
             //Log.i(TAG, currentFirebaseUser!!.uid)
             var uid = currentFirebaseUser?.uid
+            var name = currentFirebaseUser?.displayName
             var email = currentFirebaseUser?.email
-            binding?.tvName?.text = uid
+            binding?.tvUid?.text = uid
+            binding?.tvName?.text = name
             binding?.tvEmail?.text = email
 
         }

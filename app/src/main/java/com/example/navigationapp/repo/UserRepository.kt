@@ -13,5 +13,5 @@ interface UserRepository {
     suspend fun getCurrentUser(): FirebaseUser?
     suspend fun logoutUser()
     suspend fun sendPasswordResetEmail(email:String): Result<Void?>
-    suspend fun readUserInformation(uid:String):Result<DocumentSnapshot?>
+//    suspend fun readUserInformation(uid:String) :User?
 }

@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.example.navigationapp.viewmodel.FirebaseViewModel" />
+            type="com.example.navigationapp.viewmodel.UserViewModel" />
     </data>
 
     <LinearLayout
@@ -12,6 +12,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_uid"/>
 
         <TextView
             android:layout_width="wrap_content"

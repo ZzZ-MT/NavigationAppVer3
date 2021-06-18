@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.navigationapp.R
 import com.example.navigationapp.model.User
+import com.example.navigationapp.repo.UserPreferences
 import com.example.navigationapp.repo.UserRepository
 import com.example.navigationapp.repo.implementation.UserRepositoryImpl
 import com.example.navigationapp.utils.Event
@@ -19,9 +20,11 @@ import kotlinx.coroutines.launch
 import com.example.navigationapp.utils.Result
 import com.example.navigationapp.view.LoginFragment
 import com.example.navigationapp.view.RegisterFragment
+import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.coroutines.Dispatchers
 
-class FirebaseViewModel: ViewModel() {
+class UserViewModel: ViewModel() {
     private val TAG ="FirebaseViewModel"
 
     private val _toast = MutableLiveData<String?>()
@@ -35,6 +38,10 @@ class FirebaseViewModel: ViewModel() {
     private val _currentUserMLD = MutableLiveData<User>(User())
     val currentUserLD: LiveData<User>
         get() = _currentUserMLD
+
+    private val _userInformation = MutableLiveData<User>(User())
+    val userInformation:LiveData<User>
+        get() = _userInformation
 
     private val _navigateScreen = MutableLiveData<Event<Int>>()
     val navigateScreen: LiveData<Event<Int>> = _navigateScreen
@@ -66,12 +73,6 @@ class FirebaseViewModel: ViewModel() {
         viewModelScope.launch {
             currentUser = userRepository.getCurrentUser()
             Log.i(TAG,"${currentUser?.uid}")
-//            currentUser?.let {
-//                val uid = currentUser!!.uid
-//                val name = currentUser!!.displayName
-//                val email = currentUser!!.email
-//                _currentUserMLD.value = User(uid,name,email)
-//            }
         }
         return currentUser
     }
@@ -108,6 +109,16 @@ class FirebaseViewModel: ViewModel() {
                 when(val result = userRepository.registerUserFromAuthWithEmailAndPassword(email, password)) {
                     is Result.Success -> {
                         Log.e(TAG, "Result.Success")
+                        var user = userRepository.getCurrentUser()
+                        val profileUpdates = userProfileChangeRequest {
+                            displayName = name
+                        }
+                        user!!.updateProfile(profileUpdates)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Log.d(TAG, "User profile updated.")
+                                }
+                            }
                         result.data?.let {firebaseUser ->
                             createUserInFirestore(createUserObject(firebaseUser, name,email),fragment)
                             onClickButton(R.id.loginFragment)
@@ -150,14 +161,14 @@ class FirebaseViewModel: ViewModel() {
     }
 
     //Read user information
-    fun readUserInformationInFirestore(uid:String, fragment: Fragment) {
-        var userInformation:User = null
-        launchDataLoad {
-            viewModelScope.launch(Dispatchers.Main) {
-              userInformation = userRepository.readUserInformation(uid)
-            }
-        }
-    }
+//    fun readUserInformationInFirestore(uid:String, fragment: Fragment): DocumentSnapshot{
+//        val user:DocumentSnapshot
+//        viewModelScope.launch(Dispatchers.Main) {
+//            user = userRepository.readUserInformation(uid)
+//
+//        }
+//        return user
+//    }
 
     //Create User information in Firestore
     private suspend fun createUserInFirestore(user: User, fragment:Fragment) {

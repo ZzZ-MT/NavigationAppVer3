@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -19,7 +18,7 @@ import com.example.navigationapp.R
 import com.example.navigationapp.databinding.DialogResetPasswordBinding
 import com.example.navigationapp.databinding.FragmentLoginBinding
 import com.example.navigationapp.utils.EventObserver
-import com.example.navigationapp.viewmodel.FirebaseViewModel
+import com.example.navigationapp.viewmodel.UserViewModel
 
 class LoginFragment: Fragment() {
     private val TAG ="LoginFragment"
@@ -39,7 +38,7 @@ class LoginFragment: Fragment() {
 
     //ViewModel
     private val firebaseViewModel by lazy {
-        ViewModelProvider(this).get(FirebaseViewModel::class.java)
+        ViewModelProvider(this).get(UserViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {

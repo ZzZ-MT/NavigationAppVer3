@@ -1,27 +1,24 @@
 package com.example.navigationapp.view
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.DocumentsContract
 import android.util.Log
 import android.view.*
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentHomeBinding
 import com.example.navigationapp.databinding.FragmentSearchPlacesBinding
-import com.example.navigationapp.utils.PermissionUtils.isPermissionGranted
-import com.example.navigationapp.utils.PermissionUtils.requestPermission
-import com.example.navigationapp.viewmodel.FirebaseViewModel
+import com.example.navigationapp.view.adapter.BottomSheetDialogFragment
+import com.example.navigationapp.view.adapter.MarkerInfoWindow
+import com.example.navigationapp.viewmodel.UserViewModel
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.internal.ConnectionCallbacks
 import com.google.android.gms.common.api.internal.OnConnectionFailedListener
@@ -31,7 +28,7 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class HomeFragment: Fragment(),
         OnMapReadyCallback,
@@ -64,7 +61,7 @@ class HomeFragment: Fragment(),
 
 
     private val firebaseViewModel by lazy {
-        ViewModelProvider(this).get(FirebaseViewModel::class.java)
+        ViewModelProvider(this).get(UserViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -75,6 +72,8 @@ class HomeFragment: Fragment(),
         Log.i(TAG, "onCreateView")
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding?.viewmodel = firebaseViewModel
+        val inflater = LayoutInflater.from(requireContext())
+        binding =
 
         return binding?.root
     }
@@ -82,12 +81,10 @@ class HomeFragment: Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        if(isPermissionGrated) {
-//
-//        }
         // Get the SupportMapFragment and request notification when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
+
 
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -97,24 +94,21 @@ class HomeFragment: Fragment(),
 //            navController.navigate(it)
 //        })
 
-        firebaseViewModel.toast.observe(viewLifecycleOwner, Observer { message ->
+        firebaseViewModel.toast.observe(viewLifecycleOwner, { message ->
             message?.let {
                 Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
                 firebaseViewModel.onToastShown()
             }
         })
 
-        binding?.btnLogout?.setOnClickListener {
-            firebaseViewModel.logOutUser()
-            findNavController().navigate(R.id.loginFragment)
-        }
-
         binding?.btnCurrentLocation?.setOnClickListener {
             getCurrentLoc()
+            findNavController().navigate(R.id.action_homeFragment_to_bottomSheetDialog)
+//            val bottomSheet = BottomSheetDialogFragment()
+//            bottomSheet.show(supportFragmentManager,"bottom sheet")
             Log.d(TAG,"btnCurrentLocation")
         }
     }
-
 
     private fun showSearchPlacesFragment() {
         val searchPlacesBinding:FragmentSearchPlacesBinding = DataBindingUtil.inflate(LayoutInflater.from(context),
@@ -132,7 +126,13 @@ class HomeFragment: Fragment(),
     private fun getCurrentLoc() {
     fusedLocationClient.lastLocation.addOnCompleteListener {
             var location = it.result
-            gotoLocation(location.latitude,location.longitude)
+            if (location != null) {
+                gotoLocation(location.latitude,location.longitude)
+            } else {
+                Log.i(TAG, "No GPS")
+                Toast.makeText(context, "Turn on GPS", Toast.LENGTH_LONG).show()
+            }
+
         }
     }
 
@@ -144,28 +144,16 @@ class HomeFragment: Fragment(),
         map.addCircle(CircleOptions().center(latLng).radius(100.0).strokeColor(Color.BLUE))
     }
 
-
-
-
     override fun onMapReady(googleMap: GoogleMap?) {
         if (googleMap != null) {
             map = googleMap
+            map.uiSettings.isMapToolbarEnabled = false
+            map.uiSettings.isZoomControlsEnabled = false
+            map.setInfoWindowAdapter(MarkerInfoWindow(this))
         }
+
         getCurrentLoc()
-
-        val zoomLevel = 10f
-        val sydney = LatLng(-33.852, 151.211)
-//        map.apply {
-//            addMarker(
-//                    MarkerOptions()
-//                            .position(sydney)
-//                            .title("Marker in Sydney")
-//            )
-//            moveCamera(CameraUpdateFactory
-//                    .newLatLngZoom(sydney, zoomLevel))
-//        }
     }
-
 
     override fun onConnected(p0: Bundle?) {
     }
@@ -177,8 +165,6 @@ class HomeFragment: Fragment(),
     override fun onConnectionFailed(p0: ConnectionResult) {
 
     }
-
-
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)

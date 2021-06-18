@@ -7,7 +7,7 @@
             type="com.example.navigationapp.model.User" />
         <variable
             name="firebaseViewModel"
-            type="com.example.navigationapp.viewmodel.FirebaseViewModel" />
+            type="com.example.navigationapp.viewmodel.UserViewModel" />
     </data>
 
     <LinearLayout

@@ -1,24 +1,18 @@
 package com.example.navigationapp.view
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
-import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentSplashBinding
 import com.example.navigationapp.utils.EventObserver
-import com.example.navigationapp.viewmodel.FirebaseViewModel
+import com.example.navigationapp.viewmodel.UserViewModel
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +28,7 @@ class SplashFragment : Fragment() {
     private lateinit var navController: NavController
 
     private val firebaseViewModel by lazy {
-        ViewModelProvider(this).get(FirebaseViewModel::class.java)
+        ViewModelProvider(this).get(UserViewModel::class.java)
     }
 
     private var currentFirebaseUser: FirebaseUser? = null

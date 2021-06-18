@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -16,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentRegisterBinding
 import com.example.navigationapp.utils.EventObserver
-import com.example.navigationapp.viewmodel.FirebaseViewModel
+import com.example.navigationapp.viewmodel.UserViewModel
 
 
 class RegisterFragment: Fragment() {
@@ -32,7 +31,7 @@ class RegisterFragment: Fragment() {
     private var confirm:String = ""
 
     private val firebaseViewModel by lazy {
-        ViewModelProvider(this).get(FirebaseViewModel::class.java)
+        ViewModelProvider(this).get(UserViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {

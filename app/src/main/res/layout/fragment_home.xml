@@ -5,35 +5,33 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.example.navigationapp.viewmodel.FirebaseViewModel" />
+            type="com.example.navigationapp.viewmodel.UserViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/map"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_anchor="@id/bottomSheet"/>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/btn_logout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|left"
-                android:layout_margin="16dp" />
+                android:layout_height="match_parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/btn_current_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
-                android:layout_margin="16dp" />
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_baseline_my_location_24"/>
+        </FrameLayout>
 
-            <include layout="@layout/bottom_sheet"/>
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
