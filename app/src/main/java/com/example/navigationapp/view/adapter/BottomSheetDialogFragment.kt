@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
@@ -15,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
+
 class BottomSheetDialogFragment: BottomSheetDialogFragment() {
     private val TAG ="BottomSheetDialogFragment"
     lateinit var binding: BottomSheetMapBinding
@@ -23,6 +25,8 @@ class BottomSheetDialogFragment: BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+//        setStyle(STYLE_NORMAL, R.style.BottomSheetDialog)
+        dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         //dialog.setOnShowListener { setupHeight(it as BottomSheetDialog) }
         Log.i(TAG,"onCreateDialog")
         return dialog
@@ -31,7 +35,7 @@ class BottomSheetDialogFragment: BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         Log.i(TAG,"onCreateView")
         binding = DataBindingUtil.inflate(inflater, R.layout.bottom_sheet_map, container, false)
@@ -41,16 +45,26 @@ class BottomSheetDialogFragment: BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.i(TAG,"onViewCreated")
-//        binding.btnAdd.setOnClickListener {
-//            Log.i(TAG, "onViewCreated")
-//        }
+        binding.btnAdd.setOnClickListener {
+            Log.i(TAG, "onClick add btn")
+        }
+        binding.btnRoute.setOnClickListener {
+            Log.i(TAG, "onClick route btn")
+        }
+        binding.btnStart.setOnClickListener {
+            Log.i(TAG, "onClick start btn")
+        }
     }
 
     private fun setupHeight(bottomSheetDialog: BottomSheetDialog) {
         val linearLayout = bottomSheetDialog.findViewById<LinearLayout>(R.id.bottom_sheet_map)
         val behavior = linearLayout?.let { BottomSheetBehavior.from(it) }
+//        val behavior = BottomSheetBehavior.from(binding.root)
+       // behavior.peekHeight
+
         linearLayout?.background = ResourcesCompat.getDrawable(resources,R.drawable.bg_bottomsheet_dialog, null)
         behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        Log.i(TAG,"setup Height")
     }
 
 //    private fun setupButton() {

@@ -1,23 +1,21 @@
 package com.example.navigationapp.view
+
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.provider.DocumentsContract
 import android.util.Log
 import android.view.*
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentHomeBinding
 import com.example.navigationapp.databinding.FragmentSearchPlacesBinding
-import com.example.navigationapp.view.adapter.BottomSheetDialogFragment
 import com.example.navigationapp.view.adapter.MarkerInfoWindow
 import com.example.navigationapp.viewmodel.UserViewModel
 import com.google.android.gms.common.ConnectionResult
@@ -26,11 +24,11 @@ import com.google.android.gms.common.api.internal.OnConnectionFailedListener
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
+
 
 class HomeFragment: Fragment(),
         OnMapReadyCallback,
@@ -109,7 +107,7 @@ class HomeFragment: Fragment(),
 
         binding?.btnCurrentLocation?.setOnClickListener {
             getCurrentLoc()
-            findNavController().navigate(R.id.bottomSheetDialog)
+//            findNavController().navigate(R.id.bottomSheetDialog)
             map.clear()
             Log.d(TAG,"btnCurrentLocation")
         }
@@ -155,6 +153,9 @@ class HomeFragment: Fragment(),
             map.uiSettings.isMapToolbarEnabled = false
             map.uiSettings.isZoomControlsEnabled = false
             map.setInfoWindowAdapter(MarkerInfoWindow(this))
+            map.setOnInfoWindowClickListener {
+                findNavController().navigate(R.id.bottomSheetDialog)
+            }
 
             map.setOnMapClickListener { latlng -> // Clears the previously touched position
                 map.clear();
