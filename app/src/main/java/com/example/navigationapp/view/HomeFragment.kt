@@ -35,15 +35,6 @@ class HomeFragment: Fragment(),
         ConnectionCallbacks,
         OnConnectionFailedListener{
 
-    companion object {
-        /**
-         * Request code for location permission request.
-         *
-         * @see .onRequestPermissionsResult
-         */
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
-    }
-
     private val TAG ="HomeFragment"
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding

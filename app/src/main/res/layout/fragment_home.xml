@@ -8,7 +8,7 @@
             type="com.example.navigationapp.viewmodel.UserViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:navGraph="@navigation/my_nav">
@@ -32,7 +32,7 @@
                 android:src="@drawable/ic_baseline_my_location_24"/>
         </FrameLayout>
 
-<!--            <include layout="@layout/bottom_sheet_map"/>-->
+            <include layout="@layout/bottom_sheet_map"/>
 
-    </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
