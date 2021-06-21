@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import com.example.navigationapp.R
@@ -22,7 +23,8 @@ class BottomSheetDialogFragment: BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        dialog.setOnShowListener { setupHeight(it as BottomSheetDialog) }
+        //dialog.setOnShowListener { setupHeight(it as BottomSheetDialog) }
+        Log.i(TAG,"onCreateDialog")
         return dialog
     }
 
@@ -31,19 +33,21 @@ class BottomSheetDialogFragment: BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.i(TAG,"onCreateView")
         binding = DataBindingUtil.inflate(inflater, R.layout.bottom_sheet_map, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.btnAdd.setOnClickListener {
-            Log.i(TAG, "onViewCreated")
-        }
+        Log.i(TAG,"onViewCreated")
+//        binding.btnAdd.setOnClickListener {
+//            Log.i(TAG, "onViewCreated")
+//        }
     }
 
     private fun setupHeight(bottomSheetDialog: BottomSheetDialog) {
-        val linearLayout = bottomSheetDialog.findViewById<View>(R.id.bottom_sheet_map)
+        val linearLayout = bottomSheetDialog.findViewById<LinearLayout>(R.id.bottom_sheet_map)
         val behavior = linearLayout?.let { BottomSheetBehavior.from(it) }
         linearLayout?.background = ResourcesCompat.getDrawable(resources,R.drawable.bg_bottomsheet_dialog, null)
         behavior?.state = BottomSheetBehavior.STATE_COLLAPSED

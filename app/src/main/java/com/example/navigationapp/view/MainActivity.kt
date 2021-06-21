@@ -8,13 +8,16 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import com.example.navigationapp.R
 import com.example.navigationapp.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
     private val TAG="MainActivity"
     //Register Navigation Component Architecture
-    //private lateinit var navController: NavController
+//    private lateinit var navController: NavController
     //Register ViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {

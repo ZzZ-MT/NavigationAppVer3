@@ -10,7 +10,8 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:navGraph="@navigation/my_nav">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -31,7 +32,7 @@
                 android:src="@drawable/ic_baseline_my_location_24"/>
         </FrameLayout>
 
-
+<!--            <include layout="@layout/bottom_sheet_map"/>-->
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

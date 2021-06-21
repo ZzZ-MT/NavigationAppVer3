@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_homeFragment_to_bottomSheetDialog"
             app:destination="@id/bottomSheetDialog" />
+        <action
+            android:id="@+id/action_homeFragment_to_firstFragment"
+            app:destination="@id/firstFragment" />
     </fragment>
 
     <fragment
@@ -92,6 +95,17 @@
         tools:layout="@layout/bottom_sheet_map">
         <action
             android:id="@+id/action_bottomSheetDialog_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/firstFragment"
+        android:name="com.example.navigationapp.view.FirstFragment"
+        android:label="FirstFragment"
+        tools:layout="@layout/fragment_first">
+
+        <action
+            android:id="@+id/action_firstFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </dialog>
 

@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentHomeBinding
@@ -29,6 +30,7 @@ import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class HomeFragment: Fragment(),
         OnMapReadyCallback,
@@ -72,11 +74,11 @@ class HomeFragment: Fragment(),
         Log.i(TAG, "onCreateView")
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding?.viewmodel = firebaseViewModel
-        val inflater = LayoutInflater.from(requireContext())
-        binding =
+
 
         return binding?.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,6 +86,10 @@ class HomeFragment: Fragment(),
         // Get the SupportMapFragment and request notification when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
+
+        //Bottom Sheet dialog
+//        val bottomSheetDialog = BottomSheetDialog(requireContext())
+//        binding?.let { bottomSheetDialog.setContentView(it.root) }
 
 
 
@@ -103,9 +109,8 @@ class HomeFragment: Fragment(),
 
         binding?.btnCurrentLocation?.setOnClickListener {
             getCurrentLoc()
-            findNavController().navigate(R.id.action_homeFragment_to_bottomSheetDialog)
-//            val bottomSheet = BottomSheetDialogFragment()
-//            bottomSheet.show(supportFragmentManager,"bottom sheet")
+            findNavController().navigate(R.id.bottomSheetDialog)
+            map.clear()
             Log.d(TAG,"btnCurrentLocation")
         }
     }
@@ -150,6 +155,15 @@ class HomeFragment: Fragment(),
             map.uiSettings.isMapToolbarEnabled = false
             map.uiSettings.isZoomControlsEnabled = false
             map.setInfoWindowAdapter(MarkerInfoWindow(this))
+
+            map.setOnMapClickListener { latlng -> // Clears the previously touched position
+                map.clear();
+                // Animating to the touched position
+                map.animateCamera(CameraUpdateFactory.newLatLng(latlng));
+                val location = LatLng(latlng.latitude, latlng.longitude)
+                map.addMarker(MarkerOptions().position(location))
+                //findNavController().navigate(R.id.bottomSheetDialog)
+            }
         }
 
         getCurrentLoc()
