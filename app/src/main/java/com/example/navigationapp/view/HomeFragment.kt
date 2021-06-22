@@ -1,11 +1,11 @@
 package com.example.navigationapp.view
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
@@ -24,10 +24,10 @@ import com.google.android.gms.common.api.internal.OnConnectionFailedListener
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
 class HomeFragment: Fragment(),
@@ -50,6 +50,9 @@ class HomeFragment: Fragment(),
     //Navigation component
     private lateinit var navController: NavController
 
+    //Bottom sheet
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+
 
     private val firebaseViewModel by lazy {
         ViewModelProvider(this).get(UserViewModel::class.java)
@@ -63,8 +66,6 @@ class HomeFragment: Fragment(),
         Log.i(TAG, "onCreateView")
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding?.viewmodel = firebaseViewModel
-
-
         return binding?.root
     }
 
@@ -75,12 +76,6 @@ class HomeFragment: Fragment(),
         // Get the SupportMapFragment and request notification when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
-
-        //Bottom Sheet dialog
-//        val bottomSheetDialog = BottomSheetDialog(requireContext())
-//        binding?.let { bottomSheetDialog.setContentView(it.root) }
-
-
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
