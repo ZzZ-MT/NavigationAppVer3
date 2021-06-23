@@ -10,7 +10,7 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:navGraph="@navigation/my_nav">
 
         <FrameLayout
@@ -28,12 +28,82 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
-                android:layout_margin="16dp"
+                android:layout_margin="27dp"
                 android:src="@drawable/ic_baseline_my_location_24"/>
         </FrameLayout>
 
-<!--        <include layout="@layout/bottom_sheet_map"-->
-<!--            android:id="@+id/bottom_sheet_id"/>-->
+
+        <LinearLayout
+            android:id="@+id/bottomSheetMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bottomsheet_dialog"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="25dp"
+            android:gravity="center"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
+                android:background="#E8E5E5"
+                android:gravity="center|top"
+                android:src="@drawable/ic_baseline_horizontal_rule_36"
+                android:textAlignment="center" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sunrise Riverside"
+                    android:textSize="50px"
+                    android:textColor="@color/black"
+                    android:id="@+id/tv_label"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nguyen Huu Tho, Nha Be, Ho Chi Minh"
+                    android:textColor="@color/black"
+                    android:textSize="30px"
+                    android:id="@+id/tv_detail"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageButton
+                    android:layout_width="200px"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_alt_route_24"
+                    android:id="@+id/btn_route"
+                    android:layout_marginRight="20dp"/>
+
+                <ImageButton
+                    android:layout_width="200px"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_navigation_24"
+                    android:id="@+id/btn_start"
+                    android:layout_marginRight="20dp"/>
+
+                <ImageButton
+                    android:layout_width="200px"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_add"
+                    android:src="@drawable/ic_baseline_add_circle_outline_24"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

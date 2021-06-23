@@ -34,12 +34,9 @@
         android:name="com.example.navigationapp.view.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_homeFragment_to_bottomSheetDialog"
-            app:destination="@id/bottomSheetDialog" />
-        <action
-            android:id="@+id/action_homeFragment_to_firstFragment"
-            app:destination="@id/firstFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_homeFragment_to_bottomSheetDialog"-->
+<!--            app:destination="@id/bottomSheetDialog" />-->
     </fragment>
 
     <fragment
@@ -88,27 +85,15 @@
             app:destination="@id/loginFragment" />
     </fragment>
 
-    <dialog
-        android:id="@+id/bottomSheetDialog"
-        android:name="com.example.navigationapp.view.adapter.BottomSheetDialogFragment"
-        android:label="bottomSheetDialog"
-        tools:layout="@layout/bottom_sheet_map">
-        <action
-            android:id="@+id/action_bottomSheetDialog_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </dialog>
-
-    <dialog
-        android:id="@+id/firstFragment"
-        android:name="com.example.navigationapp.view.FirstFragment"
-        android:label="FirstFragment"
-        tools:layout="@layout/fragment_first">
-
-        <action
-            android:id="@+id/action_firstFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </dialog>
-
+<!--    <dialog-->
+<!--        android:id="@+id/bottomSheetDialog"-->
+<!--        android:name="com.example.navigationapp.view.adapter.BottomSheetDialogFragment"-->
+<!--        android:label="bottomSheetDialog"-->
+<!--        tools:layout="@layout/bottom_sheet_map">-->
+<!--        <action-->
+<!--            android:id="@+id/action_bottomSheetDialog_to_homeFragment"-->
+<!--            app:destination="@id/homeFragment" />-->
+<!--    </dialog>-->
 
 
 </navigation>
