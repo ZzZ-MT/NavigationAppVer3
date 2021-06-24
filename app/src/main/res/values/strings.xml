@@ -10,4 +10,7 @@
 
     <string name="base_url">https://maps.googleapis.com</string>
 
+    <string name="api_key">AIzaSyDx3gjUGwn7019wfxISfbvE_LhsJKaoA1k</string>
+
+
 </resources>

@@ -1,8 +1,8 @@
-package com.example.navigationapp.model
+package com.example.navigationapp.model.directions
 
 import com.google.gson.annotations.SerializedName
 
-data class Polyline(
+data class OverviewPolyline(
     @SerializedName("points")
     var points:String?
 )

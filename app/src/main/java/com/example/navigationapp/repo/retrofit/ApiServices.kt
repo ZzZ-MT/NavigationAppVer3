@@ -1,6 +1,6 @@
 package com.example.navigationapp.repo.retrofit
 
-import com.example.navigationapp.model.DirectionResponses
+import com.example.navigationapp.model.directions.DirectionResponses
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

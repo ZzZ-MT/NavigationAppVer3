@@ -54,7 +54,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
 
-    //bottom sheet
+    //Floating Search
+    implementation 'com.github.arimorty:floatingsearchview:2.1.1'
 
     //tab layout
     implementation 'androidx.viewpager2:viewpager2:1.0.0-alpha02'

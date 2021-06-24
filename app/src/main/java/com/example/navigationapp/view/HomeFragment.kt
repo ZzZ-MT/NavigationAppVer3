@@ -11,18 +11,23 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentHomeBinding
+import com.example.navigationapp.model.directions.DirectionResponses
+import com.example.navigationapp.repo.retrofit.RetrofitClient
 import com.example.navigationapp.view.adapter.MarkerInfoWindow
 import com.example.navigationapp.viewmodel.UserViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.maps.android.PolyUtil
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class HomeFragment: Fragment(),
@@ -34,6 +39,8 @@ class HomeFragment: Fragment(),
 
     //Google Map
     private lateinit var map: GoogleMap
+    private lateinit var sunrise: LatLng
+    private lateinit var lotte: LatLng
 
     //Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -89,6 +96,10 @@ class HomeFragment: Fragment(),
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
 
+        //Google Map direction point
+        sunrise = LatLng(10.7217076873311, 106.70363313849708)
+        lotte = LatLng(10.740228324485326, 106.70186219107477)
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         firebaseViewModel.toast.observe(viewLifecycleOwner, { message ->
@@ -113,7 +124,7 @@ class HomeFragment: Fragment(),
     fusedLocationClient.lastLocation.addOnCompleteListener {
             var location = it.result
             if (location != null) {
-                gotoLocation(location.latitude,location.longitude)
+                //gotoLocation(location.latitude,location.longitude)
             } else {
                 Log.i(TAG, "No GPS")
                 Toast.makeText(context, "Turn on GPS", Toast.LENGTH_LONG).show()
@@ -122,13 +133,13 @@ class HomeFragment: Fragment(),
         }
     }
 
-    private fun gotoLocation(latitude: Double, longitude: Double) {
-        var latLng= LatLng(latitude,longitude)
-        var cameraUpdate:CameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18F)
-        map.moveCamera(cameraUpdate)
-        map.addMarker(MarkerOptions().position(latLng).title("Your Location"))
-        map.addCircle(CircleOptions().center(latLng).radius(100.0).strokeColor(Color.BLUE))
-    }
+//    private fun gotoLocation(latitude: Double, longitude: Double) {
+//        var latLng= LatLng(latitude,longitude)
+//        var cameraUpdate:CameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18F)
+//        map.moveCamera(cameraUpdate)
+//        map.addMarker(MarkerOptions().position(latLng).title("Your Location"))
+//        map.addCircle(CircleOptions().center(latLng).radius(100.0).strokeColor(Color.BLUE))
+//    }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         if (googleMap != null) {
@@ -141,6 +152,33 @@ class HomeFragment: Fragment(),
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
             }
+            val markerFkip = MarkerOptions()
+                .position(sunrise)
+                .title("FKIP")
+            val markerMonas = MarkerOptions()
+                .position(lotte)
+                .title("Monas")
+
+            map.addMarker(markerFkip)
+            map.addMarker(markerMonas)
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(sunrise, 11.6f))
+
+            val fromFKIP = sunrise.latitude.toString() + "," + sunrise.longitude.toString()
+            val toMonas = lotte.latitude.toString() + "," + lotte.longitude.toString()
+
+            val apiServices = context?.let { RetrofitClient.apiServices(it) }
+            apiServices?.getDirection(fromFKIP, toMonas, getString(R.string.api_key))
+                ?.enqueue(object : Callback<DirectionResponses> {
+                    override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
+                        drawPolyline(response)
+                        Log.d("ok", response.message())
+                    }
+
+                    override fun onFailure(call: Call<DirectionResponses>, t: Throwable) {
+                        Log.e("thua", t.localizedMessage)
+                    }
+                })
+
             map.setOnInfoWindowCloseListener {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
@@ -153,6 +191,15 @@ class HomeFragment: Fragment(),
                 map.addMarker(MarkerOptions().position(location))
             }
         }
+    }
+
+    private fun drawPolyline(response: Response<DirectionResponses>) {
+        val shape = response.body()?.routes?.get(0)?.overviewPolyline?.points
+        val polyline = PolylineOptions()
+            .addAll(PolyUtil.decode(shape))
+            .width(8f)
+            .color(Color.BLUE)
+        map.addPolyline(polyline)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
