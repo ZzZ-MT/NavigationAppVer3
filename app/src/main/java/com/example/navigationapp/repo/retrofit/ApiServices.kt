@@ -10,4 +10,7 @@ interface ApiServices {
     fun getDirection(@Query("origin") origin: String,
                      @Query("destination") destination: String,
                      @Query("key") apiKey: String): Call<DirectionResponses>
+
+//    @GET("/maps/api/place/autocomplete/json")
+//    fun getPlaces(@Query())
 }

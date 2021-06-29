@@ -17,12 +17,18 @@ import com.example.navigationapp.model.directions.DirectionResponses
 import com.example.navigationapp.repo.retrofit.RetrofitClient
 import com.example.navigationapp.view.adapter.MarkerInfoWindow
 import com.example.navigationapp.viewmodel.UserViewModel
+import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.PolyUtil
 import retrofit2.Call
@@ -51,6 +57,9 @@ class HomeFragment: Fragment(),
     //Bottom Sheet Behavior
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
+    //Search Place Autocomplete
+    private lateinit var autoCompleteFragment:AutocompleteSupportFragment
+
 
 
     private val firebaseViewModel by lazy {
@@ -66,6 +75,7 @@ class HomeFragment: Fragment(),
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding?.viewmodel = firebaseViewModel
         initView()
+
         return binding?.root
     }
 
@@ -88,13 +98,24 @@ class HomeFragment: Fragment(),
             }
 
         })
+        // Get the SupportMapFragment and request notification when the map is ready to be used.
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
+        mapFragment?.getMapAsync(this)
+
+        //Search place api
+        if (!Places.isInitialized()) {
+            context?.let { Places.initialize(it, R.string.api_key.toString()) }
+            activity?.let { Places.createClient(it) }
+
+        }
+        autoCompleteFragment = childFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
+
+        autoCompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Get the SupportMapFragment and request notification when the map is ready to be used.
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-        mapFragment?.getMapAsync(this)
+
 
         //Google Map direction point
         sunrise = LatLng(10.7217076873311, 106.70363313849708)
@@ -114,9 +135,19 @@ class HomeFragment: Fragment(),
             //findNavController().navigate(R.id.bottomSheetDialog)
             map.clear()
             Log.d(TAG,"btnCurrentLocation")
-
         }
 
+        autoCompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+            override fun onPlaceSelected(place: Place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: ${place.name}, ${place.id}")
+            }
+
+            override fun onError(status: Status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: $status")
+            }
+        })
     }
 
     @SuppressLint("MissingPermission")
@@ -124,33 +155,31 @@ class HomeFragment: Fragment(),
     fusedLocationClient.lastLocation.addOnCompleteListener {
             var location = it.result
             if (location != null) {
-                //gotoLocation(location.latitude,location.longitude)
+                gotoLocation(location.latitude,location.longitude)
             } else {
                 Log.i(TAG, "No GPS")
                 Toast.makeText(context, "Turn on GPS", Toast.LENGTH_LONG).show()
             }
-
         }
     }
 
-//    private fun gotoLocation(latitude: Double, longitude: Double) {
-//        var latLng= LatLng(latitude,longitude)
-//        var cameraUpdate:CameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18F)
-//        map.moveCamera(cameraUpdate)
-//        map.addMarker(MarkerOptions().position(latLng).title("Your Location"))
-//        map.addCircle(CircleOptions().center(latLng).radius(100.0).strokeColor(Color.BLUE))
-//    }
+    private fun gotoLocation(latitude: Double, longitude: Double) {
+        var latLng= LatLng(latitude,longitude)
+        var cameraUpdate:CameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18F)
+        map.moveCamera(cameraUpdate)
+        map.addMarker(MarkerOptions().position(latLng).title("Your Location"))
+        map.addCircle(CircleOptions().center(latLng).radius(100.0).strokeColor(Color.BLUE))
+    }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         if (googleMap != null) {
             map = googleMap
-            getCurrentLoc()
+//            getCurrentLoc()
             map.uiSettings.isMapToolbarEnabled = false
             map.uiSettings.isZoomControlsEnabled = false
             map.setInfoWindowAdapter(MarkerInfoWindow(this))
             map.setOnInfoWindowClickListener {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-
             }
             val markerFkip = MarkerOptions()
                 .position(sunrise)
@@ -173,7 +202,6 @@ class HomeFragment: Fragment(),
                         drawPolyline(response)
                         Log.d("ok", response.message())
                     }
-
                     override fun onFailure(call: Call<DirectionResponses>, t: Throwable) {
                         Log.e("thua", t.localizedMessage)
                     }

@@ -26,7 +26,7 @@
             app:tabIndicatorColor="@color/quantum_amber600"
             app:tabMode="auto"
             app:tabTextColor="@color/white"
-            android:background="@color/black"
+            android:background="@color/quantum_grey"
             app:tabSelectedTextColor="@color/quantum_pink"
             android:layout_weight="3">
         </com.google.android.material.tabs.TabLayout>

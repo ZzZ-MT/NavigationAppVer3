@@ -34,6 +34,34 @@
                 android:src="@drawable/ic_baseline_my_location_24"/>
         </FrameLayout>
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/quantum_grey">
+
+            <fragment
+                android:id="@+id/autocomplete_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                />
+        </androidx.cardview.widget.CardView>
+
+<!--        <com.arlib.floatingsearchview.FloatingSearchView-->
+<!--            android:id="@+id/floating_search_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
+<!--            app:floatingSearch_searchBarMarginLeft="5dp"-->
+<!--            app:floatingSearch_searchBarMarginTop="5dp"-->
+<!--            app:floatingSearch_searchBarMarginRight="5dp"-->
+<!--            app:floatingSearch_searchHint="Search"-->
+<!--            app:floatingSearch_suggestionsListAnimDuration="250"-->
+<!--            app:floatingSearch_showSearchKey="true"-->
+<!--            app:floatingSearch_leftActionMode="showHamburger"-->
+<!--            app:floatingSearch_close_search_on_keyboard_dismiss="true"-->
+<!--            tools:layout_editor_absoluteY="8dp"-->
+<!--            tools:layout_editor_absoluteX="8dp"/>-->
 
         <LinearLayout
             android:id="@+id/bottomSheetMap"
@@ -77,6 +105,8 @@
                     android:id="@+id/tv_detail"/>
             </LinearLayout>
 
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -107,20 +137,6 @@
 
         </LinearLayout>
 
-        <com.arlib.floatingsearchview.FloatingSearchView
-            android:id="@+id/floating_search_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:floatingSearch_searchBarMarginLeft="5dp"
-            app:floatingSearch_searchBarMarginTop="5dp"
-            app:floatingSearch_searchBarMarginRight="5dp"
-            app:floatingSearch_searchHint="Search"
-            app:floatingSearch_suggestionsListAnimDuration="250"
-            app:floatingSearch_showSearchKey="true"
-            app:floatingSearch_leftActionMode="showHamburger"
-            app:floatingSearch_close_search_on_keyboard_dismiss="true"
-            tools:layout_editor_absoluteY="8dp"
-            tools:layout_editor_absoluteX="8dp"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
