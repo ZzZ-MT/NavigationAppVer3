@@ -221,10 +221,10 @@ class HomeFragment: Fragment(),
                 map.addMarker(markerMonas)
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(sunrise, 11.6f))
 
-                val fromFKIP = sunrise.latitude.toString() + "," + sunrise.longitude.toString()
-                val toMonas = lotte.latitude.toString() + "," + lotte.longitude.toString()
+                val from = sunrise.latitude.toString() + "," + sunrise.longitude.toString()
+                val to = lotte.latitude.toString() + "," + lotte.longitude.toString()
 
-                setRoute(fromFKIP,toMonas)
+                setRoute(from,to)
             }
 
 
