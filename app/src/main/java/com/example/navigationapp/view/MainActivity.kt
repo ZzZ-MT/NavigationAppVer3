@@ -41,10 +41,6 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkPermission()
         }
-        // Re-check before enabling. You can add an else statement to warn the user about the lack of functionality if it's disabled.
-        // "or" is used instead of "and" as per the error. If it requires both, flip it over to &&. (I'm not sure, I haven't used GPS stuff before)
-        // Re-check before enabling. You can add an else statement to warn the user about the lack of functionality if it's disabled.
-        // "or" is used instead of "and" as per the error. If it requires both, flip it over to &&. (I'm not sure, I haven't used GPS stuff before)
 
     }
     override fun onStart() {
