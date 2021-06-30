@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.coroutineScope
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentHomeBinding
 import com.example.navigationapp.model.directions.DirectionResponses
@@ -27,10 +28,13 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.RectangularBounds
+import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.PolyUtil
+import okhttp3.internal.wait
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -100,17 +104,37 @@ class HomeFragment: Fragment(),
         })
         // Get the SupportMapFragment and request notification when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
+//        lifecycle.coroutineScope.launchWhenCreated {
+//            mapFragment?.getMapAsync(this)
+//        }
         mapFragment?.getMapAsync(this)
 
         //Search place api
         if (!Places.isInitialized()) {
-            context?.let { Places.initialize(it, R.string.api_key.toString()) }
-            activity?.let { Places.createClient(it) }
-
+            context?.let { Places.initialize(it, resources.getString(R.string.api_key)) }
+            context?.let { Places.createClient(it) }
         }
+
         autoCompleteFragment = childFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
 
-        autoCompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME))
+        autoCompleteFragment.setTypeFilter(TypeFilter.ADDRESS)
+
+        autoCompleteFragment.setCountries("VN")
+
+        autoCompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS))
+        //, Place.Field.ADDRESS, Place.Field.LAT_LNG
+
+        autoCompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+            override fun onPlaceSelected(place: Place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: " + place.name)
+            }
+
+            override fun onError(status: Status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: $status")
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -137,17 +161,6 @@ class HomeFragment: Fragment(),
             Log.d(TAG,"btnCurrentLocation")
         }
 
-        autoCompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
-            override fun onPlaceSelected(place: Place) {
-                // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: ${place.name}, ${place.id}")
-            }
-
-            override fun onError(status: Status) {
-                // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: $status")
-            }
-        })
     }
 
     @SuppressLint("MissingPermission")
@@ -161,6 +174,20 @@ class HomeFragment: Fragment(),
                 Toast.makeText(context, "Turn on GPS", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun setRoute(from:String, to:String) {
+        val apiServices = context?.let { RetrofitClient.apiServices(it) }
+        apiServices?.getDirection(from, to, getString(R.string.api_key))
+            ?.enqueue(object : Callback<DirectionResponses> {
+                override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
+                    drawPolyline(response)
+                    Log.d("success", response.message())
+                }
+                override fun onFailure(call: Call<DirectionResponses>, t: Throwable) {
+                    Log.e("failure", t.localizedMessage)
+                }
+            })
     }
 
     private fun gotoLocation(latitude: Double, longitude: Double) {
@@ -181,31 +208,25 @@ class HomeFragment: Fragment(),
             map.setOnInfoWindowClickListener {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
-            val markerFkip = MarkerOptions()
-                .position(sunrise)
-                .title("FKIP")
-            val markerMonas = MarkerOptions()
-                .position(lotte)
-                .title("Monas")
 
-            map.addMarker(markerFkip)
-            map.addMarker(markerMonas)
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(sunrise, 11.6f))
 
-            val fromFKIP = sunrise.latitude.toString() + "," + sunrise.longitude.toString()
-            val toMonas = lotte.latitude.toString() + "," + lotte.longitude.toString()
+            binding?.btnStart?.setOnClickListener {
+                val markerFkip = MarkerOptions()
+                    .position(sunrise)
+                    .title("FKIP")
+                val markerMonas = MarkerOptions()
+                    .position(lotte)
+                    .title("Monas")
+                map.addMarker(markerFkip)
+                map.addMarker(markerMonas)
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(sunrise, 11.6f))
 
-            val apiServices = context?.let { RetrofitClient.apiServices(it) }
-            apiServices?.getDirection(fromFKIP, toMonas, getString(R.string.api_key))
-                ?.enqueue(object : Callback<DirectionResponses> {
-                    override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
-                        drawPolyline(response)
-                        Log.d("ok", response.message())
-                    }
-                    override fun onFailure(call: Call<DirectionResponses>, t: Throwable) {
-                        Log.e("thua", t.localizedMessage)
-                    }
-                })
+                val fromFKIP = sunrise.latitude.toString() + "," + sunrise.longitude.toString()
+                val toMonas = lotte.latitude.toString() + "," + lotte.longitude.toString()
+
+                setRoute(fromFKIP,toMonas)
+            }
+
 
             map.setOnInfoWindowCloseListener {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -222,12 +243,18 @@ class HomeFragment: Fragment(),
     }
 
     private fun drawPolyline(response: Response<DirectionResponses>) {
-        val shape = response.body()?.routes?.get(0)?.overviewPolyline?.points
-        val polyline = PolylineOptions()
-            .addAll(PolyUtil.decode(shape))
-            .width(8f)
-            .color(Color.BLUE)
-        map.addPolyline(polyline)
+        Log.i("respone", response.toString())
+        if(response.isSuccessful) {
+            val shape = response.body()?.routes?.get(0)?.overviewPolyline?.points
+            val polyline = PolylineOptions()
+                .addAll(PolyUtil.decode(shape))
+                .width(8f)
+                .color(Color.BLUE)
+            map.addPolyline(polyline)
+        } else {
+            Log.i(TAG, "Het Tien")
+        }
+
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
