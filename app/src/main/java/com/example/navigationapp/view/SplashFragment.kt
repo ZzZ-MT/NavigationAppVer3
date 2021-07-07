@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
+import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentSplashBinding
 import com.example.navigationapp.utils.EventObserver
 import com.example.navigationapp.viewmodel.UserViewModel
@@ -59,6 +61,7 @@ class SplashFragment : Fragment() {
         //Navigation Controller
         navController = Navigation.findNavController(view)
         firebaseViewModel.navigateScreen.observe(requireActivity(), EventObserver {
+            navController.popBackStack(R.id.splashFragment,true)
             navController.navigate(it)
         })
 

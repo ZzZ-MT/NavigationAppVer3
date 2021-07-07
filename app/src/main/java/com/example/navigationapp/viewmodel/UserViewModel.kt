@@ -24,7 +24,7 @@ import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.coroutines.Dispatchers
 
-class UserViewModel: ViewModel() {
+class   UserViewModel: ViewModel() {
     private val TAG ="FirebaseViewModel"
 
     private val _toast = MutableLiveData<String?>()
@@ -62,7 +62,10 @@ class UserViewModel: ViewModel() {
             if(firebaseUser != null) {
                 onClickButton(R.id.tabFragment)
             } else {
+                ///action_splashFragment_to_tabFragment cannot be found from the current destination NavGraph
+//                onClickButton(R.id.action_splashFragment_to_loginFragment)
                 onClickButton(R.id.loginFragment)
+
             }
         }
         return firebaseUser
@@ -121,7 +124,7 @@ class UserViewModel: ViewModel() {
                             }
                         result.data?.let {firebaseUser ->
                             createUserInFirestore(createUserObject(firebaseUser, name,email),fragment)
-                            onClickButton(R.id.loginFragment)
+                            onClickButton(R.id.action_registerFragment_to_loginFragment)
                         }
                     }
                     is Result.Error -> {

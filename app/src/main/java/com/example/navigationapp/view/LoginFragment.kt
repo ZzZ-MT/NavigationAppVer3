@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.DialogResetPasswordBinding
@@ -69,6 +70,7 @@ class LoginFragment: Fragment() {
 
         navController = Navigation.findNavController(view)
         firebaseViewModel.navigateScreen.observe(requireActivity(), EventObserver {
+            navController.popBackStack(R.id.loginFragment,true)
             navController.navigate(it)
         })
 
@@ -80,7 +82,7 @@ class LoginFragment: Fragment() {
         })
 
         binding?.tvChangeView?.setOnClickListener {
-            findNavController().navigate(R.id.registerFragment)
+            navController.navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
             Log.i(TAG,"changeView?")
         }
 

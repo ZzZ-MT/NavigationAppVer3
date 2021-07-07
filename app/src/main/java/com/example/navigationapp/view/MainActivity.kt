@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.ActivityMainBinding
@@ -23,18 +24,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG,"onCreate")
-//        if (!AppPreferences.firstRun) {
-//            AppPreferences.firstRun = true
-//            Log.d("SpinKotlin", "The value of our pref is: ${AppPreferences.firstRun}")
-//        }
-//        if (AppPreferences.changeUserName == null) {
-//            AppPreferences.changeUserName = "Dat"
-//        }
-//
-//        if(!AppPreferences.changeUserStatus) {
-//            AppPreferences.changeUserStatus = true
-//        }
 
+//        navController = Navigation.findNavController(this, R.id.con)
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -73,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "onDestroy")
     }
 
-    fun checkPermission() {
+    private fun checkPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(this,

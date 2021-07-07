@@ -9,9 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentHomeBinding
 import com.example.navigationapp.model.directions.DirectionResponses
@@ -28,13 +34,11 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.RectangularBounds
 import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.PolyUtil
-import okhttp3.internal.wait
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -56,7 +60,7 @@ class HomeFragment: Fragment(),
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     //Navigation component
-//    private lateinit var navController: NavController
+    private lateinit var navController: NavController
 
     //Bottom Sheet Behavior
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
@@ -102,6 +106,7 @@ class HomeFragment: Fragment(),
             }
 
         })
+
         // Get the SupportMapFragment and request notification when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
 //        lifecycle.coroutineScope.launchWhenCreated {
@@ -207,6 +212,15 @@ class HomeFragment: Fragment(),
             map.setInfoWindowAdapter(MarkerInfoWindow(this))
             map.setOnInfoWindowClickListener {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+
+            binding?.btnRoute?.setOnClickListener {
+                //navController = Navigation.findNavController(requireView())
+//                val action = HomeFragmentDirections.actionHomeFragmentToRouteFragment()
+//                navController?.navigateUp()
+//                navController?.navigate(action)
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToRouteFragment())
+
             }
 
 
