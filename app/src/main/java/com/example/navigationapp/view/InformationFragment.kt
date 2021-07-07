@@ -25,7 +25,7 @@ class InformationFragment: Fragment() {
     private val TAG ="InformationFragment"
     private var _binding: FragmentInformationBinding? = null
     private val binding get() = _binding
-    //private lateinit var navController: NavController
+    private lateinit var navController: NavController
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private var currentFirebaseUser: FirebaseUser? = null
 
@@ -51,16 +51,22 @@ class InformationFragment: Fragment() {
         Log.i(TAG, "onCreateView")
         binding?.viewmodel = firebaseViewModel
         _binding = FragmentInformationBinding.inflate(inflater, container, false)
+
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        navController = findNavController()
+
         binding?.btLogout?.setOnClickListener {
             coroutineScope.launch {
                 firebaseViewModel.logOutUser()
-                findNavController().navigate(R.id.loginFragment)
+//                navController.popBackStack(R.id.informationFragment,true)
+                //findNavController().navigateUp()
+                //findNavController().navigate(R.id.loginFragment)
+                navController.navigate(InformationFragmentDirections.actionInformationFragmentToLoginFragment())
             }
         }
 
