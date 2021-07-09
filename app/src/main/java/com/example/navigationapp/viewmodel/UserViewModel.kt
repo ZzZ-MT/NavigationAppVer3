@@ -60,11 +60,11 @@ class   UserViewModel: ViewModel() {
             firebaseUser = userRepository.getCurrentUser()
             Log.i(TAG,"${firebaseUser?.uid}")
             if(firebaseUser != null) {
-                onClickButton(R.id.tabFragment)
+                onClickButton(R.id.action_splashFragment_to_main_nav_graph)
             } else {
                 ///action_splashFragment_to_tabFragment cannot be found from the current destination NavGraph
 //                onClickButton(R.id.action_splashFragment_to_loginFragment)
-                onClickButton(R.id.loginFragment)
+                onClickButton(R.id.action_splashFragment_to_loginFragment)
 
             }
         }
@@ -148,7 +148,7 @@ class   UserViewModel: ViewModel() {
                     is Result.Success -> {
                         Log.d(TAG,"Result.Success")
                         _toast.value = result.data?.displayName
-                        onClickButton(R.id.tabFragment)
+                        onClickButton(R.id.action_loginFragment_to_main_nav_graph)
                     }
                     is Result.Error -> {
                         Log.e(TAG, "${result.exception.message}")

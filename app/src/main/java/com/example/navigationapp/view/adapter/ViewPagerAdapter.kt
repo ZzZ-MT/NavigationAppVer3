@@ -3,6 +3,7 @@ package com.example.navigationapp.view.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.navigationapp.view.HomeFragment
 import com.example.navigationapp.view.InformationFragment

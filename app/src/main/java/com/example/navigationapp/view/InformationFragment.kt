@@ -63,10 +63,10 @@ class InformationFragment: Fragment() {
         binding?.btLogout?.setOnClickListener {
             coroutineScope.launch {
                 firebaseViewModel.logOutUser()
-//                navController.popBackStack(R.id.informationFragment,true)
+                navController.popBackStack(R.id.tabFragment,true)
                 //findNavController().navigateUp()
                 //findNavController().navigate(R.id.loginFragment)
-                navController.navigate(InformationFragmentDirections.actionInformationFragmentToLoginFragment())
+                navController.navigate(R.id.my_nav)
             }
         }
 
