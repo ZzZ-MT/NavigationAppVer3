@@ -1,16 +1,14 @@
 package com.example.navigationapp.viewmodel
 
-import android.app.Activity
-import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavDirections
 import com.example.navigationapp.R
 import com.example.navigationapp.model.User
-import com.example.navigationapp.repo.UserPreferences
 import com.example.navigationapp.repo.UserRepository
 import com.example.navigationapp.repo.implementation.UserRepositoryImpl
 import com.example.navigationapp.utils.Event
@@ -20,8 +18,8 @@ import kotlinx.coroutines.launch
 import com.example.navigationapp.utils.Result
 import com.example.navigationapp.view.LoginFragment
 import com.example.navigationapp.view.RegisterFragment
+import com.example.navigationapp.view.SplashFragmentDirections
 import com.google.firebase.auth.ktx.userProfileChangeRequest
-import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.coroutines.Dispatchers
 
 class   UserViewModel: ViewModel() {
@@ -60,11 +58,11 @@ class   UserViewModel: ViewModel() {
             firebaseUser = userRepository.getCurrentUser()
             Log.i(TAG,"${firebaseUser?.uid}")
             if(firebaseUser != null) {
-                onClickButton(R.id.action_splashFragment_to_main_nav_graph)
+                onClickButton(R.id.main_nav_graph)
             } else {
                 ///action_splashFragment_to_tabFragment cannot be found from the current destination NavGraph
 //                onClickButton(R.id.action_splashFragment_to_loginFragment)
-                onClickButton(R.id.action_splashFragment_to_loginFragment)
+                onClickButton(R.id.loginFragment)
 
             }
         }
@@ -148,7 +146,7 @@ class   UserViewModel: ViewModel() {
                     is Result.Success -> {
                         Log.d(TAG,"Result.Success")
                         _toast.value = result.data?.displayName
-                        onClickButton(R.id.action_loginFragment_to_main_nav_graph)
+                        onClickButton(R.id.main_nav_graph)
                     }
                     is Result.Error -> {
                         Log.e(TAG, "${result.exception.message}")

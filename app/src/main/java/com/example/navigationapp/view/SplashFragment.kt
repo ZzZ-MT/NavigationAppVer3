@@ -16,14 +16,11 @@ import com.example.navigationapp.databinding.FragmentSplashBinding
 import com.example.navigationapp.utils.EventObserver
 import com.example.navigationapp.viewmodel.UserViewModel
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 class SplashFragment : Fragment() {
-    private val TAG ="SplashFragment"
+    private val TAG = "SplashFragment"
     private var _binding: FragmentSplashBinding? = null
     private val binding get() = _binding
 
@@ -61,22 +58,21 @@ class SplashFragment : Fragment() {
         //Navigation Controller
         navController = Navigation.findNavController(view)
         firebaseViewModel.navigateScreen.observe(requireActivity(), EventObserver {
-            navController.popBackStack(R.id.splashFragment,true)
+            navController.popBackStack(R.id.splashFragment, true)
             navController.navigate(it)
         })
 
-        coroutineScope.launch(Dispatchers.IO) {
-            delay(3000)
+        coroutineScope.launch(Dispatchers.Main) {
             currentFirebaseUser = firebaseViewModel.getCurrentUser()
-//            if(currentFirebaseUser == null) {
-//                findNavController().navigate(R.id.loginFragment)
+            delay(3000)
+//            if(currentFirebaseUser != null) {
+//                navController.navigate(SplashFragmentDirections.actionSplashFragmentToMainNavGraph())
 //            } else {
-//                currentFirebaseUser?.let { firebaseUser ->
-//                    Log.i(TAG, firebaseUser.uid)
-//                    findNavController().navigate(R.id.tabFragment)
-//                }
+//                navController.navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
 //            }
+//        }
+
+            Log.i(TAG, "onViewCreated")
         }
-        Log.i(TAG, "onViewCreated")
     }
 }

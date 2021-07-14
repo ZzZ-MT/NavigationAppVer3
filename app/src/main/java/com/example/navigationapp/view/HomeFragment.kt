@@ -188,24 +188,24 @@ class HomeFragment: Fragment(),
                 .position(lotte)
                 .title("Monas")
 
-            map.addMarker(markerFkip)
-            map.addMarker(markerMonas)
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(sunrise, 11.6f))
-
-            val fromFKIP = sunrise.latitude.toString() + "," + sunrise.longitude.toString()
-            val toMonas = lotte.latitude.toString() + "," + lotte.longitude.toString()
-
-            val apiServices = context?.let { RetrofitClient.apiServices(it) }
-            apiServices?.getDirection(fromFKIP, toMonas, getString(R.string.api_key))
-                ?.enqueue(object : Callback<DirectionResponses> {
-                    override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
-                        drawPolyline(response)
-                        Log.d("ok", response.message())
-                    }
-                    override fun onFailure(call: Call<DirectionResponses>, t: Throwable) {
-                        Log.e("thua", t.localizedMessage)
-                    }
-                })
+//            map.addMarker(markerFkip)
+//            map.addMarker(markerMonas)
+//            map.moveCamera(CameraUpdateFactory.newLatLngZoom(sunrise, 11.6f))
+//
+//            val fromFKIP = sunrise.latitude.toString() + "," + sunrise.longitude.toString()
+//            val toMonas = lotte.latitude.toString() + "," + lotte.longitude.toString()
+//
+//            val apiServices = context?.let { RetrofitClient.apiServices(it) }
+//            apiServices?.getDirection(fromFKIP, toMonas, getString(R.string.api_key))
+//                ?.enqueue(object : Callback<DirectionResponses> {
+//                    override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
+//                        drawPolyline(response)
+//                        Log.d("ok", response.message())
+//                    }
+//                    override fun onFailure(call: Call<DirectionResponses>, t: Throwable) {
+//                        Log.e("thua", t.localizedMessage)
+//                    }
+//                })
 
             map.setOnInfoWindowCloseListener {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED

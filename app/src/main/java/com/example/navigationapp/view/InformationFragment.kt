@@ -66,7 +66,7 @@ class InformationFragment: Fragment() {
                 navController.popBackStack(R.id.tabFragment,true)
                 //findNavController().navigateUp()
                 //findNavController().navigate(R.id.loginFragment)
-                navController.navigate(R.id.my_nav)
+                navController.navigate(R.id.loginFragment)
             }
         }
 
@@ -81,7 +81,6 @@ class InformationFragment: Fragment() {
             binding?.tvUid?.text = uid
             binding?.tvName?.text = name
             binding?.tvEmail?.text = email
-
         }
         Log.i(TAG, "onViewCreated")
     }

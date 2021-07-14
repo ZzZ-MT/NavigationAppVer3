@@ -56,13 +56,13 @@ class RegisterFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        navController = Navigation.findNavController(view)
         binding?.tvChangeView?.setOnClickListener {
-            findNavController().navigate(R.id.loginFragment)
+            navController.navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
         }
 
         //Navigation Controller
-        navController = Navigation.findNavController(view)
+
         firebaseViewModel.navigateScreen.observe(requireActivity(), EventObserver {
             navController.navigate(it)
         })
