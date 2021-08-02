@@ -60,11 +60,9 @@ class HomeFragment: Fragment(),
     //Search Place Autocomplete
     private lateinit var autoCompleteFragment:AutocompleteSupportFragment
 
-
-
-    private val firebaseViewModel by lazy {
-        ViewModelProvider(this).get(UserViewModel::class.java)
-    }
+//    private val firebaseViewModel by lazy {
+//        ViewModelProvider(this).get(UserViewModel::class.java)
+//    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -73,7 +71,7 @@ class HomeFragment: Fragment(),
     ): View? {
         Log.i(TAG, "onCreateView")
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        binding?.viewmodel = firebaseViewModel
+//        binding?.viewmodel = firebaseViewModel
         initView()
 
         return binding?.root
@@ -92,12 +90,11 @@ class HomeFragment: Fragment(),
                     else -> Log.i(TAG,"OTHER_STATE")
                 }
             }
-
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 Log.i(TAG,"onSlide")
             }
-
         })
+
         // Get the SupportMapFragment and request notification when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
@@ -106,7 +103,6 @@ class HomeFragment: Fragment(),
         if (!Places.isInitialized()) {
             context?.let { Places.initialize(it, R.string.api_key.toString()) }
             activity?.let { Places.createClient(it) }
-
         }
         autoCompleteFragment = childFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
 
@@ -123,12 +119,12 @@ class HomeFragment: Fragment(),
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        firebaseViewModel.toast.observe(viewLifecycleOwner, { message ->
-            message?.let {
-                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-                firebaseViewModel.onToastShown()
-            }
-        })
+//        firebaseViewModel.toast.observe(viewLifecycleOwner, { message ->
+//            message?.let {
+//                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+//                firebaseViewModel.onToastShown()
+//            }
+//        })
 
         binding?.btnCurrentLocation?.setOnClickListener {
             getCurrentLoc()

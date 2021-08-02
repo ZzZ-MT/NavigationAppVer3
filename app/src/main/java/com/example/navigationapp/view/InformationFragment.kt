@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentInformationBinding
 import com.example.navigationapp.utils.EventObserver
+import com.example.navigationapp.viewmodel.InformationViewModel
 import com.example.navigationapp.viewmodel.UserViewModel
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
@@ -29,8 +30,8 @@ class InformationFragment: Fragment() {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private var currentFirebaseUser: FirebaseUser? = null
 
-    private val firebaseViewModel by lazy {
-        ViewModelProvider(this).get(UserViewModel::class.java)
+    private val informationViewModel by lazy {
+        ViewModelProvider(this).get(InformationViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {
@@ -49,7 +50,7 @@ class InformationFragment: Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         Log.i(TAG, "onCreateView")
-        binding?.viewmodel = firebaseViewModel
+        binding?.viewmodel = informationViewModel
         _binding = FragmentInformationBinding.inflate(inflater, container, false)
 
         return binding?.root
@@ -62,7 +63,7 @@ class InformationFragment: Fragment() {
 
         binding?.btLogout?.setOnClickListener {
             coroutineScope.launch {
-                firebaseViewModel.logOutUser()
+                informationViewModel.logOutUser()
                 navController.popBackStack(R.id.tabFragment,true)
                 //findNavController().navigateUp()
                 //findNavController().navigate(R.id.loginFragment)
@@ -73,7 +74,7 @@ class InformationFragment: Fragment() {
         coroutineScope.launch {
             Log.i(TAG,"loading")
 
-            currentFirebaseUser = firebaseViewModel.getCurrentUserInformation()
+            currentFirebaseUser = informationViewModel.getCurrentUserInformation()
             //Log.i(TAG, currentFirebaseUser!!.uid)
             var uid = currentFirebaseUser?.uid
             var name = currentFirebaseUser?.displayName

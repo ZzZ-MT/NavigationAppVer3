@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentRegisterBinding
 import com.example.navigationapp.utils.EventObserver
+import com.example.navigationapp.viewmodel.RegisterViewModel
 import com.example.navigationapp.viewmodel.UserViewModel
 
 
@@ -30,8 +31,8 @@ class RegisterFragment: Fragment() {
     private var password:String = ""
     private var confirm:String = ""
 
-    private val firebaseViewModel by lazy {
-        ViewModelProvider(this).get(UserViewModel::class.java)
+    private val registerViewModel by lazy {
+        ViewModelProvider(this).get(RegisterViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {
@@ -62,15 +63,28 @@ class RegisterFragment: Fragment() {
         }
 
         //Navigation Controller
-
-        firebaseViewModel.navigateScreen.observe(requireActivity(), EventObserver {
+        registerViewModel.navigateScreen.observe(requireActivity(), EventObserver {
             navController.navigate(it)
         })
 
-        firebaseViewModel.toast.observe(viewLifecycleOwner, { message ->
+        registerViewModel.spinner.observe(viewLifecycleOwner, { value ->
+            value.let {show ->
+                binding?.spinnerRegister?.visibility = if (show) {
+                    View.VISIBLE
+                    Log.i(TAG,"Visible")
+                } else {
+                    View.GONE
+                    Log.i(TAG,"Invisible")
+                }
+                Log.i(TAG, "$show")
+
+            }
+        })
+
+        registerViewModel.toast.observe(viewLifecycleOwner, { message ->
             message?.let {
                 Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-                firebaseViewModel.onToastShown()
+                registerViewModel.onToastShown()
             }
         })
 
@@ -83,7 +97,7 @@ class RegisterFragment: Fragment() {
 
             if(name != "" && email != "" && password != "" && confirm != "") {
                 if (password == confirm) {
-                    firebaseViewModel.registerUserFromAuthWithEmailAndPassword(name,email,password,this)
+                    registerViewModel.registerUserFromAuthWithEmailAndPassword(name,email,password,this)
                 } else {
                     Toast.makeText(activity, "Your password is not match",
                             Toast.LENGTH_LONG).show()

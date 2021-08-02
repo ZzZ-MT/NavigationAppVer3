@@ -8,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -19,6 +21,7 @@ import com.example.navigationapp.R
 import com.example.navigationapp.databinding.DialogResetPasswordBinding
 import com.example.navigationapp.databinding.FragmentLoginBinding
 import com.example.navigationapp.utils.EventObserver
+import com.example.navigationapp.viewmodel.LoginViewModel
 import com.example.navigationapp.viewmodel.UserViewModel
 
 class LoginFragment: Fragment() {
@@ -31,15 +34,11 @@ class LoginFragment: Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding
 
-    //Binding dialog
-//    private var _bindingDialog:DialogResetPasswordBinding? = null
-//    private var bindingDialog get() = _bindingDialog
-
     private lateinit var navController: NavController
 
     //ViewModel
-    private val firebaseViewModel by lazy {
-        ViewModelProvider(this).get(UserViewModel::class.java)
+    private val loginViewModel by lazy {
+        ViewModelProvider(this).get(LoginViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {
@@ -61,7 +60,7 @@ class LoginFragment: Fragment() {
         Log.i(TAG, "onCreateView")
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         //binding view model
-        binding?.viewmodel = firebaseViewModel
+        binding?.viewmodel = loginViewModel
         return binding?.root
     }
 
@@ -69,15 +68,34 @@ class LoginFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         navController = Navigation.findNavController(view)
-        firebaseViewModel.navigateScreen.observe(requireActivity(), EventObserver {
+        loginViewModel.navigateScreen.observe(viewLifecycleOwner, EventObserver {
             navController.popBackStack(R.id.loginFragment,true)
             navController.navigate(it)
         })
 
-        firebaseViewModel.toast.observe(viewLifecycleOwner, { message ->
+        loginViewModel.spinner.observe(viewLifecycleOwner, { value ->
+            value.let {show ->
+//                binding?.spinnerLogin?.visibility = if (show) {
+//                    VISIBLE
+//                    Log.i(TAG,"Visible")
+//                } else {
+//                    GONE
+//                    Log.i(TAG,"Invisible")
+//                }
+//                Log.i(TAG, "$show")
+                if(show == true) {
+                    binding?.spinnerLogin?.visibility = View.VISIBLE
+                } else {
+                    binding?.spinnerLogin?.visibility = View.GONE
+                }
+
+            }
+        })
+
+        loginViewModel.toast.observe(viewLifecycleOwner, { message ->
             message?.let {
                 Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-                firebaseViewModel.onToastShown()
+                loginViewModel.onToastShown()
             }
         })
 
@@ -92,7 +110,7 @@ class LoginFragment: Fragment() {
             password = binding?.etPassword?.text.toString()
 
             if(email != "" && password != "") {
-                firebaseViewModel.loginUserFromAuthWithEmailAndPassword(email,password,this)
+                loginViewModel.loginUserFromAuthWithEmailAndPassword(email,password,this)
             } else {
                 Toast.makeText(activity, "Please fill all gaps",
                     Toast.LENGTH_LONG).show()
@@ -122,7 +140,7 @@ class LoginFragment: Fragment() {
         }
 
         dialogBinding.btnReset.setOnClickListener {
-            firebaseViewModel.sendPasswordResetEmail(
+            loginViewModel.sendPasswordResetEmail(
                 dialogBinding.etEmail.text.toString().trim(),this)
             Log.e(TAG,email)
             dialogView?.dismiss()

@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -14,6 +15,7 @@ import androidx.navigation.Navigation
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentSplashBinding
 import com.example.navigationapp.utils.EventObserver
+import com.example.navigationapp.viewmodel.SplashViewModel
 import com.example.navigationapp.viewmodel.UserViewModel
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.*
@@ -26,8 +28,8 @@ class SplashFragment : Fragment() {
 
     private lateinit var navController: NavController
 
-    private val firebaseViewModel by lazy {
-        ViewModelProvider(this).get(UserViewModel::class.java)
+    private val splashViewModel by lazy {
+        ViewModelProvider(this).get(SplashViewModel::class.java)
     }
 
     private var currentFirebaseUser: FirebaseUser? = null
@@ -55,23 +57,24 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //toast display
+        splashViewModel.toast.observe(viewLifecycleOwner, { message ->
+            message?.let {
+                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                splashViewModel.onToastShown()
+            }
+        })
+
         //Navigation Controller
         navController = Navigation.findNavController(view)
-        firebaseViewModel.navigateScreen.observe(requireActivity(), EventObserver {
+        splashViewModel.navigateScreen.observe(requireActivity(), EventObserver {
             navController.popBackStack(R.id.splashFragment, true)
             navController.navigate(it)
         })
 
         coroutineScope.launch(Dispatchers.Main) {
-            currentFirebaseUser = firebaseViewModel.getCurrentUser()
+            currentFirebaseUser = splashViewModel.getCurrentUser()
             delay(3000)
-//            if(currentFirebaseUser != null) {
-//                navController.navigate(SplashFragmentDirections.actionSplashFragmentToMainNavGraph())
-//            } else {
-//                navController.navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
-//            }
-//        }
-
             Log.i(TAG, "onViewCreated")
         }
     }

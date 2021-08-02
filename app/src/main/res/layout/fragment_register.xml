@@ -6,8 +6,8 @@
             name="user"
             type="com.example.navigationapp.model.User" />
         <variable
-            name="firebaseViewModel"
-            type="com.example.navigationapp.viewmodel.UserViewModel" />
+            name="viewmodel"
+            type="com.example.navigationapp.viewmodel.RegisterViewModel" />
     </data>
 
     <LinearLayout
@@ -58,6 +58,12 @@
             android:text="Already have account?"
             android:id="@+id/tv_change_view"
             android:padding="20dp"/>
+
+        <ProgressBar
+            android:id="@+id/spinner_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
     </LinearLayout>
 
 </layout>
