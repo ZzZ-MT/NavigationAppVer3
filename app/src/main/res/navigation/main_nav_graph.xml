@@ -11,11 +11,24 @@
         android:label="TabFragment"
         tools:layout="@layout/fragment_tab">
         <action
-            android:id="@+id/action_tabFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_tabFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/tabFragment"
+            app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_tabFragment_to_informationFragment"
-            app:destination="@id/informationFragment" />
+            android:id="@+id/action_homeFragment_to_routeDialogFragment"
+            app:destination="@id/routeDialogFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_tabFragment_to_addPlaceDialogFragment"
+            app:destination="@id/addPlaceDialogFragment" />
+
+        <!--        <action-->
+<!--            android:id="@+id/action_tabFragment_to_routeFragment"-->
+<!--            app:destination="@id/routeFragment" />-->
     </fragment>
     <fragment
         android:id="@+id/informationFragment"
@@ -28,30 +41,26 @@
             app:popUpTo="@id/informationFragment"
             app:popUpToInclusive="true" />
     </fragment>
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.navigationapp.view.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
-        <!--        <action-->
-        <!--            android:id="@+id/action_homeFragment_to_bottomSheetDialog"-->
-        <!--            app:destination="@id/bottomSheetDialog" />-->
-        <action
-            android:id="@+id/action_homeFragment_to_routeFragment"
-            app:destination="@id/routeFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-    </fragment>
-    <fragment
-        android:id="@+id/routeFragment"
-        android:name="com.example.navigationapp.view.RouteFragment"
-        android:label="RouteFragment"
-        tools:layout="@layout/fragment_route">
 
-        <action
-            android:id="@+id/action_routeFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
     </fragment>
+
+
+    <dialog
+        android:id="@+id/routeDialogFragment"
+        android:name="com.example.navigationapp.view.RouteDialogFragment"
+        android:label="RouteDialogFragment"
+        tools:layout="@layout/fragment_route"/>
+
+    <dialog
+        android:id="@+id/addPlaceDialogFragment"
+        android:name="com.example.navigationapp.view.AddPlaceDialogFragment"
+        android:label="AddPlaceDialogFragment"
+        tools:layout="@layout/fragment_add_place_dialog"
+        />
 </navigation>

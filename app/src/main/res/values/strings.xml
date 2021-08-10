@@ -10,5 +10,14 @@
     <string name="base_url">https://maps.googleapis.com</string>
     <string name="api_key">AIzaSyDUac8LqhhJvgE0da13Zet3OXYzWDRjTCY</string>
 
+    <string name="selected_item">Type of Place:</string>
+
+    <string-array name="type_of_place">
+        <item>Work</item>
+        <item>Home</item>
+        <item>Entertainment</item>
+        <item>Other</item>
+    </string-array>
+
 
 </resources>

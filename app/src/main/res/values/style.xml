@@ -3,4 +3,10 @@
     <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="android:backgroundDimAmount">0</item>
     </style>
+
+    <style name="FullScreenDialog" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <item name="android:statusBarColor">#280680</item>
+        <item name="windowNoTitle">true</item>
+
+    </style>
 </resources>

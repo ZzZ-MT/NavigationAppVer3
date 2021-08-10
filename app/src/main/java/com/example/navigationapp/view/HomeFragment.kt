@@ -11,6 +11,10 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.example.navigationapp.R
 import com.example.navigationapp.databinding.FragmentHomeBinding
 import com.example.navigationapp.model.directions.DirectionResponses
@@ -52,7 +56,7 @@ class HomeFragment: Fragment(),
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     //Navigation component
-//    private lateinit var navController: NavController
+    private lateinit var navController: NavController
 
     //Bottom Sheet Behavior
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
@@ -126,11 +130,22 @@ class HomeFragment: Fragment(),
 //            }
 //        })
 
+        val navController = findNavController()
         binding?.btnCurrentLocation?.setOnClickListener {
             getCurrentLoc()
             //findNavController().navigate(R.id.bottomSheetDialog)
             map.clear()
             Log.d(TAG,"btnCurrentLocation")
+        }
+
+        binding?.btnRoute?.setOnClickListener {
+            val route = TabFragmentDirections.actionHomeFragmentToRouteDialogFragment()
+            navController?.navigate(route)
+        }
+
+        binding?.btnAdd?.setOnClickListener {
+            val add = TabFragmentDirections.actionTabFragmentToAddPlaceDialogFragment()
+            navController?.navigate(add)
         }
 
         autoCompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
@@ -145,6 +160,7 @@ class HomeFragment: Fragment(),
             }
         })
     }
+
 
     @SuppressLint("MissingPermission")
     private fun getCurrentLoc() {
